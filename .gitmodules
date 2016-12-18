@@ -1,0 +1,4 @@
+[submodule "ige"]
+	path = ige
+	url = git@github.com:Irrelon/ige.git
+	branch = stable
