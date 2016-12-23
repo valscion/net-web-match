@@ -1,5 +1,5 @@
 /**
- * Adds keyboard control to the entity this component is added to.
+ * Adds keyboard and mouse control to the entity this component is added to.
  * @type {IgeClass}
  */
 var PlayerControlledComponent = IgeClass.extend({
@@ -16,11 +16,17 @@ var PlayerControlledComponent = IgeClass.extend({
     ige.input.mapAction('walkUp', ige.input.key.w);
     ige.input.mapAction('walkDown', ige.input.key.s);
 
-    // Add the playerControlledComponent behaviour to the entity
-    this._entity.addBehaviour('playerControlledComponent_behaviour', this._behaviour);
+    // Add the playerControlledComponent behaviours to the entity
+    this._entity
+      .addBehaviour('playerControlledComponent_keyboardBehaviour', this._keyboardBehaviour)
+      .addBehaviour('playerControlledComponent_mouseBehaviour', this._mouseBehaviour);
   },
 
-  _behaviour: function (ctx) {
+  _mouseBehaviour: function () {
+    this.rotateToPoint(ige._currentViewport.mousePos());
+  },
+
+  _keyboardBehaviour: function () {
     var vel = 0.15,
       direction = '';
 
