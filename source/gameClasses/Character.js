@@ -3,6 +3,9 @@ var Character = IgeEntity.extend({
 
   init: function () {
     IgeEntity.prototype.init.call(this);
+
+    // Setup the entity
+    this.addComponent(IgeVelocityComponent);
   },
 
   /**

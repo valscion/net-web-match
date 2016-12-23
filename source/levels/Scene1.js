@@ -22,6 +22,7 @@ var Scene1 = IgeSceneGraph.extend({
     // Create an entity and mount it to the scene
     self.obj[0] = new Character()
       .id('player1')
+      .addComponent(PlayerControlledComponent)
       .depth(1)
       .width(70)
       .height(38)
