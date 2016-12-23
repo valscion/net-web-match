@@ -11,10 +11,10 @@ var PlayerControlledComponent = IgeClass.extend({
     this._entity = entity;
 
     // Setup the control system
-    ige.input.mapAction('walkLeft', ige.input.key.left);
-    ige.input.mapAction('walkRight', ige.input.key.right);
-    ige.input.mapAction('walkUp', ige.input.key.up);
-    ige.input.mapAction('walkDown', ige.input.key.down);
+    ige.input.mapAction('walkLeft', ige.input.key.a);
+    ige.input.mapAction('walkRight', ige.input.key.d);
+    ige.input.mapAction('walkUp', ige.input.key.w);
+    ige.input.mapAction('walkDown', ige.input.key.s);
 
     // Add the playerControlledComponent behaviour to the entity
     this._entity.addBehaviour('playerControlledComponent_behaviour', this._behaviour);
