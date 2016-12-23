@@ -12,10 +12,6 @@ var Client = IgeClass.extend({
     // Load the player textures and store them in the gameTexture object
     self.gameTexture = {};
     self.gameTexture.player1 = new IgeTexture('./assets/textures/sprites/player1.png');
-    self.gameTexture.player2 = new IgeTexture('./assets/textures/sprites/player2.png');
-
-    // Load a smart texture
-    self.gameTexture.simpleBox = new IgeTexture('./assets/textures/smartTextures/simpleBox.js');
 
     // Wait for our textures to load before continuing
     ige.on('texturesLoaded', function () {

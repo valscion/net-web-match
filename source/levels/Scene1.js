@@ -28,30 +28,6 @@ var Scene1 = IgeSceneGraph.extend({
       .texture(ige.client.gameTexture.player1)
       .translateTo(0, 0, 0)
       .mount(self.scene1);
-
-    // Create a second rotator entity and mount
-    // it to the first one at 0, 50 relative to the
-    // parent
-    self.obj[1] = new Rotator(0.1)
-      .id('player2')
-      .depth(1)
-      .width(70)
-      .height(40)
-      .texture(ige.client.gameTexture.player2)
-      .translateTo(0, 50, 0)
-      .mount(self.obj[0]);
-
-    // Create a third rotator entity and mount
-    // it to the first on at 0, -50 relative to the
-    // parent, but assign it a smart texture!
-    self.obj[2] = new Rotator(0.1)
-      .id('simpleBox')
-      .depth(1)
-      .width(50)
-      .height(50)
-      .texture(ige.client.gameTexture.simpleBox)
-      .translateTo(0, -50, 0)
-      .mount(self.obj[0]);
   },
 
   /**
