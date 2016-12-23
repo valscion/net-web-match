@@ -20,7 +20,7 @@ var Scene1 = IgeSceneGraph.extend({
       .mount(baseScene);
 
     // Create an entity and mount it to the scene
-    self.obj[0] = new Rotator(0.1)
+    self.obj[0] = new Character()
       .id('player1')
       .depth(1)
       .width(70)
