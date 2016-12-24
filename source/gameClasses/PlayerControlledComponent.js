@@ -6,9 +6,11 @@ var PlayerControlledComponent = IgeClass.extend({
   classId: 'PlayerControlledComponent',
   componentId: 'player',
 
-  init: function (entity) {
+  init: function (entity, options) {
     // Store the entity that this component has been added to
     this._entity = entity;
+
+    this._options = options;
 
     // Setup the control system
     ige.input.mapAction('walkLeft', ige.input.key.a);

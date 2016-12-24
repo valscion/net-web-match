@@ -24,14 +24,11 @@ var Client = IgeClass.extend({
       ige.start(function (success) {
         // Check if the engine started successfully
         if (success) {
-          // Load the base scene data
-          ige.addGraph('IgeBaseScene');
-
-          // Add all the items in Scene1 to the scenegraph
-          // (see gameClasses/Scene1.js :: addGraph() to see
+          // Add all the items in GameScene to the scenegraph
+          // (see gameClasses/GameScene.js :: addGraph() to see
           // the method being called by the engine and how
           // the items are added to the scenegraph)
-          ige.addGraph('Scene1');
+          ige.addGraph('GameScene');
         }
       });
     });
