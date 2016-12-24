@@ -15,6 +15,8 @@ var Client = IgeClass.extend({
     self.gameTexture.backgroundPattern =
       new IgeTexture('./assets/textures/background/backgroundPattern.png');
 
+    self._addEditor();
+
     // Wait for our textures to load before continuing
     ige.on('texturesLoaded', function () {
       // Create the HTML canvas
@@ -31,6 +33,33 @@ var Client = IgeClass.extend({
           ige.addGraph('GameScene');
         }
       });
+    });
+  },
+
+  _addEditor: function () {
+    ige.addComponent(IgeEditorComponent);
+    var editor = ige.editor;
+
+    // Hook the input component's keyUp and check for the = symbol... if there, toggle editor
+    this._activateKeyHandleEditor = ige.input.on('keyUp', function (event) {
+      if (event.key === "§") {
+        // = key pressed, toggle the editor
+        editor.toggle();
+
+        // Return true to stop this event from being emitted by the engine to the scenegraph
+        return true;
+      }
+    });
+
+    // Hook the input component's keyUp and check for the - symbol... if there, toggle stats
+    this._activateKeyHandleStats = ige.input.on('keyUp', function (event) {
+      if (event.key === "+") {
+        // Toggle the stats
+        editor.toggleStats();
+
+        // Return true to stop this event from being emitted by the engine to the scenegraph
+        return true;
+      }
     });
   }
 });
