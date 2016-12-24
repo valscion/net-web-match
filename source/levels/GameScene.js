@@ -17,7 +17,7 @@ var GameScene = IgeSceneGraph.extend({
       .id('vp1')
       .autoSize(true)
       .scene(self.gameScene)
-      .drawBounds(true)
+      .drawBounds(false)
       .mount(ige);
 
     // Create the background repeat scene
