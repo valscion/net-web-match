@@ -37,9 +37,6 @@ var Client = IgeClass.extend({
           // the method being called by the engine and how
           // the items are added to the scenegraph)
           ige.addGraph('GameScene');
-
-          // Open the editor
-          ige.editor.toggle();
         }
       });
     });
