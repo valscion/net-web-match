@@ -29,8 +29,10 @@ var PlayerControlledComponent = IgeClass.extend({
   },
 
   _keyboardBehaviour: function () {
-    var vel = 0.15,
-      direction = '';
+    var vel = 7.5;
+    var direction = '';
+    var b2dBody = this._box2dBody;
+    var b2dVel = b2dBody.GetLinearVelocity();
 
     if (ige.input.actionState('walkUp')) {
       direction += 'N';
@@ -50,50 +52,48 @@ var PlayerControlledComponent = IgeClass.extend({
 
     switch (direction) {
       case 'N':
-        this.velocity.x(0)
-          .velocity.y(-vel);
+        b2dVel.y = -vel;
         break;
 
       case 'S':
-        this.velocity.x(0)
-          .velocity.y(vel);
+        b2dVel.y = vel;
         break;
 
       case 'E':
-        this.velocity.x(vel)
-          .velocity.y(0);
+        b2dVel.x = vel;
         break;
 
       case 'W':
-        this.velocity.x(-vel)
-          .velocity.y(0);
+        b2dVel.x = -vel;
         break;
 
       case 'NE':
-        this.velocity.x(vel)
-          .velocity.y(-vel);
+        b2dVel.x = vel;
+        b2dVel.y = -vel;
         break;
 
       case 'NW':
-        this.velocity.x(-vel)
-          .velocity.y(-vel);
+        b2dVel.x = -vel;
+        b2dVel.y = -vel;
         break;
 
       case 'SE':
-        this.velocity.x(vel)
-          .velocity.y(vel);
+        b2dVel.x = vel;
+        b2dVel.y = vel;
         break;
 
       case 'SW':
-        this.velocity.x(-vel)
-          .velocity.y(vel);
+        b2dVel.x = -vel;
+        b2dVel.y = vel;
         break;
 
       default:
-        this.velocity.x(0)
-          .velocity.y(0);
+        b2dVel.x = 0;
+        b2dVel.y = 0;
         break;
     }
+
+    b2dBody.SetLinearVelocity(b2dVel);
   }
 });
 

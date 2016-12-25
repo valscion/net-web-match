@@ -42,16 +42,16 @@ var GameScene = IgeSceneGraph.extend({
     self.player
       .box2dBody({
         type: 'dynamic',
-        linearDamping: 10.0,
+        linearDamping: 20.0,
         angularDamping: 0.1,
         allowSleep: true,
         bullet: false,
-        gravitic: true,
+        gravitic: false,
         fixedRotation: false,
         fixtures: [{
           density: 1.0,
           friction: 0.5,
-          restitution: 0.6,
+          restitution: 0,
           shape: {
             type: 'circle'
           }
