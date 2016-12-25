@@ -42,8 +42,6 @@ var GameScene = IgeSceneGraph.extend({
     // character entity's movement
     self.vp1.camera.lookAt(self.player);
     self.vp1.camera.trackTranslate(self.player, 0);
-
-    self.player.translateTo(-200, 0, 0);
   },
 
   /**
