@@ -40,7 +40,6 @@ var GameScene = IgeSceneGraph.extend({
 
     // Tell the main viewport's camera to track the
     // character entity's movement
-    self.vp1.camera.lookAt(self.player);
     self.vp1.camera.trackTranslate(self.player, 0);
   },
 
