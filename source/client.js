@@ -6,6 +6,12 @@ var Client = IgeClass.extend({
     ige.showStats(1);
     ige.input.debug(true);
 
+    // Add physics and setup physics world
+    ige.addComponent(IgeBox2dComponent)
+      .box2d.sleep(true)
+      .box2d.createWorld()
+      .box2d.start();
+
     // Load our textures
     self.obj = [];
 

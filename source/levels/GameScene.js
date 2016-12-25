@@ -38,9 +38,50 @@ var GameScene = IgeSceneGraph.extend({
       .translateTo(0, 0, 0)
       .mount(self.gameScene);
 
+    // Setup physics for the player
+    self.player
+      .box2dBody({
+        type: 'dynamic',
+        linearDamping: 10.0,
+        angularDamping: 0.1,
+        allowSleep: true,
+        bullet: false,
+        gravitic: true,
+        fixedRotation: false,
+        fixtures: [{
+          density: 1.0,
+          friction: 0.5,
+          restitution: 0.6,
+          shape: {
+            type: 'circle'
+          }
+        }]
+      });
+
+    // Create a static box to test out physics interaction
+    new IgeEntityBox2d()
+      .translateTo(0, 50, 0)
+      .width(100)
+      .height(40)
+      .drawBounds(true)
+      .mount(self.gameScene)
+      .box2dBody({
+        type: 'static',
+        allowSleep: true,
+        fixtures: [{
+          shape: {
+            type: 'rectangle'
+          }
+        }]
+      });
+
     // Tell the main viewport's camera to track the
     // character entity's movement
     self.vp1.camera.trackTranslate(self.player, 0);
+
+    // Add the box2d debug painter entity to the
+    // scene to show the box2d body outlines
+    ige.box2d.enableDebug(self.gameScene);
   },
 
   /**

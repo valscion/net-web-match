@@ -1,8 +1,8 @@
-var Character = IgeEntity.extend({
+var Character = IgeEntityBox2d.extend({
   classId: 'Character',
 
   init: function () {
-    IgeEntity.prototype.init.call(this);
+    IgeEntityBox2d.prototype.init.call(this);
 
     // Setup the entity
     this.addComponent(IgeVelocityComponent);
