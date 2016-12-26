@@ -61,7 +61,7 @@ var GameScene = IgeSceneGraph.extend({
     // Create a static box to test out physics interaction
     new IgeEntityBox2d()
       .translateTo(0, 50, 0)
-      .width(100)
+      .width(400)
       .height(40)
       .drawBounds(true)
       .mount(self.gameScene)
