@@ -29,7 +29,7 @@ var PlayerControlledComponent = IgeClass.extend({
   },
 
   _keyboardBehaviour: function () {
-    var vel = 7.5;
+    var vel = 5;
     var direction = '';
     var b2dBody = this._box2dBody;
     var b2dVel = b2dBody.GetLinearVelocity();
