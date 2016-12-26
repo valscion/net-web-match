@@ -42,7 +42,11 @@ var GameScene = IgeSceneGraph.extend({
     self.player
       .box2dBody({
         type: 'dynamic',
-        linearDamping: 20.0,
+        // Velocity is always set manually and unset when needed, so
+        // we don't want the physics engine to slow the player down
+        // unnecessarily. This way we will get similar velocity no
+        // matter what FPS the game is currently running on.
+        linearDamping: 0.0,
         angularDamping: 0.1,
         allowSleep: true,
         bullet: false,
