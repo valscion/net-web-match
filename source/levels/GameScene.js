@@ -47,7 +47,7 @@ var GameScene = IgeSceneGraph.extend({
         // unnecessarily. This way we will get similar velocity no
         // matter what FPS the game is currently running on.
         linearDamping: 0.0,
-        angularDamping: 0.1,
+        angularDamping: 0.0,
         allowSleep: true,
         bullet: false,
         gravitic: false,
