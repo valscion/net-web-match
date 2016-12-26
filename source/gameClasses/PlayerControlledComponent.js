@@ -52,19 +52,23 @@ var PlayerControlledComponent = IgeClass.extend({
 
     switch (direction) {
       case 'N':
+        b2dVel.x = 0;
         b2dVel.y = -vel;
         break;
 
       case 'S':
+        b2dVel.x = 0;
         b2dVel.y = vel;
         break;
 
       case 'E':
         b2dVel.x = vel;
+        b2dVel.y = 0;
         break;
 
       case 'W':
         b2dVel.x = -vel;
+        b2dVel.y = 0;
         break;
 
       case 'NE':
