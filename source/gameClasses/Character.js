@@ -7,11 +7,14 @@ var Character = IgeEntityBox2d.extend({
     // Setup the entity
     this.addComponent(IgeVelocityComponent);
 
-    // Setup size and texture
-    this
-      .texture(ige.client.assets.player1.pistol)
-      .width(ige.client.assets.player1.pistol._sizeX)
-      .height(ige.client.assets.player1.pistol._sizeY);
+    // Setup size
+    this.width(38).height(70);
+
+    // Calculate id already, for logs to display correct ID ever since start
+    this.id();
+
+    // Start with pistol
+    this.changeWeapon('pistol');
   },
 
   /**
@@ -21,6 +24,24 @@ var Character = IgeEntityBox2d.extend({
   tick: function (ctx) {
     // Call the IgeEntity (super-class) tick() method
     IgeEntity.prototype.tick.call(this, ctx);
+  },
+
+  /**
+   * Change the character wielded weapon the one specified as parameter.
+   *
+   * @returns {Character} the "this" value, useful for chaining
+   */
+  changeWeapon: function (weapon) {
+    if (this._weapon !== weapon) {
+      this.log(`Changing weapon to ${weapon}`);
+      this._weapon = weapon;
+
+      if (ige.isClient) {
+        this.texture(ige.client.assets.player1[weapon]);
+      }
+    }
+
+    return this;
   }
 });
 
