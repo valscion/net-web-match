@@ -18,8 +18,8 @@ var Client = IgeClass.extend({
     // Load the player textures and store them in the gameTexture object
     self.gameTexture = {};
     self.gameTexture.player1 = new IgeTexture('./assets/textures/sprites/player1.png');
-    self.gameTexture.backgroundPattern =
-      new IgeTexture('./assets/textures/background/backgroundPattern.png');
+    // self.gameTexture.backgroundPattern =
+    //   new IgeTexture('./assets/textures/background/backgroundPattern.png');
 
     self._addEditor();
 
