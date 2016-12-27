@@ -12,9 +12,6 @@ var Client = IgeClass.extend({
       .box2d.createWorld()
       .box2d.start();
 
-    // Load our textures
-    self.obj = [];
-
     // Load the player textures and store them in the gameTexture object
     self.gameTexture = {};
     self.gameTexture.player1 = new IgeTexture('./assets/textures/sprites/player1.png');
