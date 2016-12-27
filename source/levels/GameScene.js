@@ -24,7 +24,7 @@ var GameScene = IgeSceneGraph.extend({
     // self.backgroundScene = new IgeScene2d()
     //   .id('backgroundScene')
     //   .depth(0)
-    //   .backgroundPattern(ige.client.gameTexture.backgroundPattern, 'repeat', true, true)
+    //   .backgroundPattern(ige.client.assets.backgroundPattern, 'repeat', true, true)
     //   .mount(self.gameScene);
 
     // Create an entity and mount it to the scene
@@ -32,9 +32,9 @@ var GameScene = IgeSceneGraph.extend({
       .id('player1')
       .addComponent(PlayerControlledComponent)
       .depth(1)
-      .texture(ige.client.gameTexture.player1)
-      .width(ige.client.gameTexture.player1._sizeX)
-      .height(ige.client.gameTexture.player1._sizeY)
+      .texture(ige.client.assets.player1)
+      .width(ige.client.assets.player1._sizeX)
+      .height(ige.client.assets.player1._sizeY)
       .translateTo(0, 0, 0)
       .mount(self.gameScene);
 

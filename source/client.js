@@ -12,11 +12,8 @@ var Client = IgeClass.extend({
       .box2d.createWorld()
       .box2d.start();
 
-    // Load the player textures and store them in the gameTexture object
-    self.gameTexture = {};
-    self.gameTexture.player1 = new IgeTexture('./assets/textures/sprites/player1.png');
-    // self.gameTexture.backgroundPattern =
-    //   new IgeTexture('./assets/textures/background/backgroundPattern.png');
+    // Load the media for the game
+    self.addComponent(NetMatchAssets);
 
     self._addEditor();
 
