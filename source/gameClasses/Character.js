@@ -6,6 +6,12 @@ var Character = IgeEntityBox2d.extend({
 
     // Setup the entity
     this.addComponent(IgeVelocityComponent);
+
+    // Setup size and texture
+    this
+      .texture(ige.client.assets.player1.pistol)
+      .width(ige.client.assets.player1.pistol._sizeX)
+      .height(ige.client.assets.player1.pistol._sizeY);
   },
 
   /**

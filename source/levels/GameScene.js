@@ -33,9 +33,6 @@ var GameScene = IgeSceneGraph.extend({
       .id('player1')
       .addComponent(PlayerControlledComponent)
       .depth(1)
-      .texture(ige.client.assets.player1)
-      .width(ige.client.assets.player1._sizeX)
-      .height(ige.client.assets.player1._sizeY)
       .translateTo(0, 0, 0)
       .mount(self.gameScene);
 
