@@ -3,18 +3,68 @@ var Server = IgeClass.extend({
   Server: true,
 
   init: function (options) {
-    // Start the network server
-    ige.addComponent(IgeSocketIoComponent);
-    ige.network.start();
+    var self = this;
+    ige.timeScale(1);
 
-    // Start the game engine
-    ige.start(function (success) {
-      // Check if the engine started successfully
-      if (success) {
-        // Accept incoming connections
-        ige.network.acceptConnections(true);
-      }
-    });
+    // Define an object to hold references to our player entities
+    this.players = {};
+
+    // Define an array to hold our tile data
+    this.tileData = [];
+
+    // Add the server-side game methods / event handlers
+    this.implement(ServerNetworkEvents);
+
+    // Add physics and setup physics world
+    ige.addComponent(IgeBox2dComponent)
+      .box2d.sleep(true)
+      .box2d.createWorld()
+      .box2d.start();
+
+    // Add the networking component
+    ige.addComponent(IgeNetIoComponent)
+      // Start the network server
+      .network.start(2000, function () {
+        // Networking has started so start the game engine
+        ige.start(function (success) {
+          // Check if the engine started successfully
+          if (success) {
+            // Create some network commands we will need
+            ige.network.define('gameTiles', function (data, clientId, requestId) {
+              console.log('Client gameTiles command received from client id "' + clientId + '" with data:', data);
+
+              // Send the tile data back
+              ige.network.response(requestId, self.tileData);
+            });
+
+            ige.network.define('playerEntity', self._onPlayerEntity);
+
+            ige.network.define('playerControlLeftDown', self._onPlayerLeftDown);
+            ige.network.define('playerControlRightDown', self._onPlayerRightDown);
+            ige.network.define('playerControlUpDown', self._onPlayerUpDown);
+            ige.network.define('playerControlDownDown', self._onPlayerDownDown);
+
+            ige.network.define('playerControlLeftUp', self._onPlayerLeftUp);
+            ige.network.define('playerControlRightUp', self._onPlayerRightUp);
+            ige.network.define('playerControlUpUp', self._onPlayerUpUp);
+            ige.network.define('playerControlDownUp', self._onPlayerDownUp);
+
+            ige.network.on('connect', self._onPlayerConnect); // Defined in ./gameClasses/ServerNetworkEvents.js
+            ige.network.on('disconnect', self._onPlayerDisconnect); // Defined in ./gameClasses/ServerNetworkEvents.js
+
+            // Add the network stream component
+            ige.network.addComponent(IgeStreamComponent)
+              .stream.sendInterval(30) // Send a stream update once every 30 milliseconds
+              .stream.start(); // Start the stream
+
+            // Accept incoming network connections
+            ige.network.acceptConnections(true);
+
+            // Create the scene
+            ige.addGraph('GameScene');
+          }
+        });
+      });
   }
 });
 

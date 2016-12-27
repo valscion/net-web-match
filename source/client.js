@@ -6,6 +6,12 @@ var Client = IgeClass.extend({
     ige.showStats(1);
     ige.input.debug(true);
 
+    // Enable networking
+    ige.addComponent(IgeNetIoComponent);
+
+    // Implement our game methods
+    this.implement(ClientNetworkEvents);
+
     // Add physics and setup physics world
     ige.addComponent(IgeBox2dComponent)
       .box2d.sleep(true)
@@ -26,11 +32,21 @@ var Client = IgeClass.extend({
       ige.start(function (success) {
         // Check if the engine started successfully
         if (success) {
-          // Add all the items in GameScene to the scenegraph
-          // (see gameClasses/GameScene.js :: addGraph() to see
-          // the method being called by the engine and how
-          // the items are added to the scenegraph)
-          ige.addGraph('GameScene');
+          // Start the networking (you can do this elsewhere if it
+          // makes sense to connect to the server later on rather
+          // than before the scene etc are created... maybe you want
+          // a splash screen or a menu first? Then connect after you've
+          // got a username or something?
+          ige.network.start('http://localhost:2000', function () {
+            ige.network.addComponent(IgeStreamComponent)
+              // Create a listener that will fire whenever an entity
+              // is created because of the incoming stream data
+              .stream.on('entityCreated', function (entity) {
+                console.log('Stream entity created with ID: ' + entity.id());
+              });
+
+            ige.addGraph('IgeBaseScene');
+          });
         }
       });
     });

@@ -6,7 +6,7 @@ var GameScene = IgeSceneGraph.extend({
    * @param options
    */
   addGraph: function (options) {
-    var self = ige.client;
+    var self = ige;
 
     // Create the scene
     self.gameScene = new IgeScene2d()
@@ -21,15 +21,15 @@ var GameScene = IgeSceneGraph.extend({
       .mount(ige);
 
     // Create the background repeat scene
-    self.backgroundScene = new IgeScene2d()
-      .id('backgroundScene')
-      .depth(0)
-      .ignoreCamera(true)
-      .backgroundPattern(ige.client.assets.backgroundPattern, 'repeat', true, true)
-      .mount(self.gameScene);
+    // self.backgroundScene = new IgeScene2d()
+    //   .id('backgroundScene')
+    //   .depth(0)
+    //   .ignoreCamera(true)
+    //   .backgroundPattern(ige.client.assets.backgroundPattern, 'repeat', true, true)
+    //   .mount(self.gameScene);
 
     // Create an entity and mount it to the scene
-    self.player = new Character()
+    self.playerControl = new Character()
       .id('player1')
       .addComponent(PlayerControlledComponent)
       .depth(1)
@@ -37,7 +37,7 @@ var GameScene = IgeSceneGraph.extend({
       .mount(self.gameScene);
 
     // Setup physics for the player
-    self.player
+    self.playerControl
       .box2dBody({
         type: 'dynamic',
         // Velocity is always set manually and unset when needed, so
@@ -68,7 +68,7 @@ var GameScene = IgeSceneGraph.extend({
 
     // Add the box2d debug painter entity to the
     // scene to show the box2d body outlines
-    ige.box2d.enableDebug(self.gameScene);
+    // ige.box2d.enableDebug(self.gameScene);
   },
 
   /**
@@ -86,7 +86,7 @@ var GameScene = IgeSceneGraph.extend({
   },
 
   _addMap: function () {
-    var self = ige.client;
+    var self = ige;
     var bodyDeclaration = {
       type: 'static',
       allowSleep: true,

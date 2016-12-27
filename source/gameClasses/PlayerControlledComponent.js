@@ -4,7 +4,7 @@
  */
 var PlayerControlledComponent = IgeClass.extend({
   classId: 'PlayerControlledComponent',
-  componentId: 'player',
+  componentId: 'playerControl',
 
   init: function (entity, options) {
     // Store the entity that this component has been added to
@@ -12,11 +12,18 @@ var PlayerControlledComponent = IgeClass.extend({
 
     this._options = options;
 
+    this.controls = {
+      left: false,
+      right: false,
+      up: false,
+      down: false
+    };
+
     // Setup the control system
-    ige.input.mapAction('walkLeft', ige.input.key.a);
-    ige.input.mapAction('walkRight', ige.input.key.d);
-    ige.input.mapAction('walkUp', ige.input.key.w);
-    ige.input.mapAction('walkDown', ige.input.key.s);
+    ige.input.mapAction('left', ige.input.key.a);
+    ige.input.mapAction('right', ige.input.key.d);
+    ige.input.mapAction('up', ige.input.key.w);
+    ige.input.mapAction('down', ige.input.key.s);
 
     // Add the playerControlledComponent behaviours to the entity
     this._entity
@@ -29,69 +36,100 @@ var PlayerControlledComponent = IgeClass.extend({
   },
 
   _keyboardBehaviour: function () {
-    var vel = 5;
-    var direction = '';
-    var b2dBody = this._box2dBody;
-    var b2dVel = new ige.box2d.b2Vec2(0, 0);
+    /* CEXCLUDE */
+    if (ige.isServer) {
+      var b2dBody = this._box2dBody;
+      var b2dVel = new ige.box2d.b2Vec2(0, 0);
 
-    if (ige.input.actionState('walkUp')) {
-      direction += 'N';
+      if (this.playerControl.controls.left) {
+        b2dVel.x = -this.playerControl._speed;
+      } else if (this.playerControl.controls.right) {
+        b2dVel.x = this.playerControl._speed;
+      }
+
+      if (this.playerControl.controls.up) {
+        b2dVel.y = -this.playerControl._speed;
+      } else if (this.playerControl.controls.down) {
+        b2dVel.y = this.playerControl._speed;
+      }
+
+      b2dBody.SetLinearVelocity(b2dVel);
     }
+    /* CEXCLUDE */
 
-    if (ige.input.actionState('walkDown')) {
-      direction += 'S';
+    if (ige.isClient) {
+      if (ige.input.actionState('left')) {
+        if (!this.playerControl.controls.left) {
+          // Record the new state
+          this.playerControl.controls.left = true;
+
+          // Tell the server about our control change
+          ige.network.send('playerControlLeftDown');
+        }
+      } else {
+        if (this.playerControl.controls.left) {
+          // Record the new state
+          this.playerControl.controls.left = false;
+
+          // Tell the server about our control change
+          ige.network.send('playerControlLeftUp');
+        }
+      }
+
+      if (ige.input.actionState('right')) {
+        if (!this.playerControl.controls.right) {
+          // Record the new state
+          this.playerControl.controls.right = true;
+
+          // Tell the server about our control change
+          ige.network.send('playerControlRightDown');
+        }
+      } else {
+        if (this.playerControl.controls.right) {
+          // Record the new state
+          this.playerControl.controls.right = false;
+
+          // Tell the server about our control change
+          ige.network.send('playerControlRightUp');
+        }
+      }
+
+      if (ige.input.actionState('up')) {
+        if (!this.playerControl.controls.up) {
+          // Record the new state
+          this.playerControl.controls.up = true;
+
+          // Tell the server about our control change
+          ige.network.send('playerControlUpDown');
+        }
+      } else {
+        if (this.playerControl.controls.up) {
+          // Record the new state
+          this.playerControl.controls.up = false;
+
+          // Tell the server about our control change
+          ige.network.send('playerControlUpUp');
+        }
+      }
+
+      if (ige.input.actionState('down')) {
+        if (!this.playerControl.controls.down) {
+          // Record the new state
+          this.playerControl.controls.down = true;
+
+          // Tell the server about our control change
+          ige.network.send('playerControlDownDown');
+        }
+      } else {
+        if (this.playerControl.controls.down) {
+          // Record the new state
+          this.playerControl.controls.down = false;
+
+          // Tell the server about our control change
+          ige.network.send('playerControlDownUp');
+        }
+      }
     }
-
-    if (ige.input.actionState('walkLeft')) {
-      direction += 'W';
-    }
-
-    if (ige.input.actionState('walkRight')) {
-      direction += 'E';
-    }
-
-    switch (direction) {
-      case 'N':
-        b2dVel.y = -vel;
-        break;
-
-      case 'S':
-        b2dVel.y = vel;
-        break;
-
-      case 'E':
-        b2dVel.x = vel;
-        break;
-
-      case 'W':
-        b2dVel.x = -vel;
-        break;
-
-      case 'NE':
-        b2dVel.x = vel;
-        b2dVel.y = -vel;
-        break;
-
-      case 'NW':
-        b2dVel.x = -vel;
-        b2dVel.y = -vel;
-        break;
-
-      case 'SE':
-        b2dVel.x = vel;
-        b2dVel.y = vel;
-        break;
-
-      case 'SW':
-        b2dVel.x = -vel;
-        b2dVel.y = vel;
-        break;
-
-      default:
-        // Velocity default to zero so do nothing
-    }
-
-    b2dBody.SetLinearVelocity(b2dVel);
   }
 });
 
