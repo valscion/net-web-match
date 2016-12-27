@@ -62,22 +62,7 @@ var GameScene = IgeSceneGraph.extend({
         }]
       });
 
-    // Create a static box to test out physics interaction
-    new IgeEntityBox2d()
-      .translateTo(0, 50, 0)
-      .width(400)
-      .height(40)
-      .drawBounds(true)
-      .mount(self.gameScene)
-      .box2dBody({
-        type: 'static',
-        allowSleep: true,
-        fixtures: [{
-          shape: {
-            type: 'rectangle'
-          }
-        }]
-      });
+    this._addMap();
 
     // Tell the main viewport's camera to track the
     // character entity's movement
@@ -97,5 +82,30 @@ var GameScene = IgeSceneGraph.extend({
     // 'gameScene' entity, destroying it will remove everything we
     // added to it.
     ige.$('gameScene').destroy();
+  },
+
+  _addMap: function () {
+    var self = ige.client;
+    var bodyDeclaration = {
+      type: 'static',
+      allowSleep: true,
+      fixtures: [{
+        shape: {
+          type: 'rectangle'
+        }
+      }]
+    };
+
+    [
+      new IgeEntityBox2d().translateTo(0, 150, 0).width(500).height(40),
+      new IgeEntityBox2d().translateTo(0, -150, 0).width(500).height(40),
+      new IgeEntityBox2d().translateTo(230, 0, 0).width(40).height(260),
+      new IgeEntityBox2d().translateTo(-230, 0, 0).width(40).height(260),
+    ].map(function (box) {
+      box
+        .drawBounds(true)
+        .mount(self.gameScene)
+        .box2dBody(bodyDeclaration);
+    });
   }
 });
