@@ -7,7 +7,7 @@ var NetMatchAssets = IgeClass.extend({
 
     // Load the player texture
     self.player1 = new IgeTexture('./assets/textures/sprites/player1.png');
-    // self.backgroundPattern =
-    //   new IgeTexture('./assets/textures/background/backgroundPattern.png');
+    self.backgroundPattern =
+      new IgeTexture('./assets/textures/background/backgroundPattern.png');
   }
 });

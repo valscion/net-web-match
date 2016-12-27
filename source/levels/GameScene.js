@@ -21,11 +21,12 @@ var GameScene = IgeSceneGraph.extend({
       .mount(ige);
 
     // Create the background repeat scene
-    // self.backgroundScene = new IgeScene2d()
-    //   .id('backgroundScene')
-    //   .depth(0)
-    //   .backgroundPattern(ige.client.assets.backgroundPattern, 'repeat', true, true)
-    //   .mount(self.gameScene);
+    self.backgroundScene = new IgeScene2d()
+      .id('backgroundScene')
+      .depth(0)
+      .ignoreCamera(true)
+      .backgroundPattern(ige.client.assets.backgroundPattern, 'repeat', true, true)
+      .mount(self.gameScene);
 
     // Create an entity and mount it to the scene
     self.player = new Character()
