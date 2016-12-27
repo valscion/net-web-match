@@ -76,6 +76,9 @@ var GameScene = IgeSceneGraph.extend({
    * active graph.
    */
   removeGraph: function () {
+    // Destroy the viewport
+    ige.$('vp1').destroy();
+
     // Since all our objects in addGraph() were mounted to the
     // 'gameScene' entity, destroying it will remove everything we
     // added to it.
