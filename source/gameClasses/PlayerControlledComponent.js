@@ -32,7 +32,7 @@ var PlayerControlledComponent = IgeClass.extend({
     var vel = 5;
     var direction = '';
     var b2dBody = this._box2dBody;
-    var b2dVel = b2dBody.GetLinearVelocity();
+    var b2dVel = new ige.box2d.b2Vec2(0, 0);
 
     if (ige.input.actionState('walkUp')) {
       direction += 'N';
@@ -52,23 +52,19 @@ var PlayerControlledComponent = IgeClass.extend({
 
     switch (direction) {
       case 'N':
-        b2dVel.x = 0;
         b2dVel.y = -vel;
         break;
 
       case 'S':
-        b2dVel.x = 0;
         b2dVel.y = vel;
         break;
 
       case 'E':
         b2dVel.x = vel;
-        b2dVel.y = 0;
         break;
 
       case 'W':
         b2dVel.x = -vel;
-        b2dVel.y = 0;
         break;
 
       case 'NE':
@@ -92,9 +88,7 @@ var PlayerControlledComponent = IgeClass.extend({
         break;
 
       default:
-        b2dVel.x = 0;
-        b2dVel.y = 0;
-        break;
+        // Velocity default to zero so do nothing
     }
 
     b2dBody.SetLinearVelocity(b2dVel);
