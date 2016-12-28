@@ -10,9 +10,6 @@ var Character = IgeEntityBox2d.extend({
     // Setup size
     this.width(38).height(70);
 
-    // Calculate id already, for logs to display correct ID ever since start
-    this.id();
-
     // Start with pistol
     this.changeWeapon('pistol');
   },

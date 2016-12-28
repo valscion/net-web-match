@@ -3,8 +3,7 @@ var Client = IgeClass.extend({
 
   init: function () {
     var self = this;
-    ige.showStats(1);
-    ige.input.debug(true);
+    // ige.input.debug(true);
 
     // Enable networking
     ige.addComponent(IgeNetIoComponent);
@@ -13,15 +12,16 @@ var Client = IgeClass.extend({
     this.implement(ClientNetworkEvents);
 
     // Add physics and setup physics world
-    ige.addComponent(IgeBox2dComponent)
-      .box2d.sleep(true)
-      .box2d.createWorld()
-      .box2d.start();
+    // ige.addComponent(IgeBox2dComponent)
+    //   .box2d.sleep(true)
+    //   .box2d.createWorld()
+    //   .box2d.networkDebugMode(true)
+    //   .box2d.start();
 
     // Load the media for the game
     self.addComponent(NetMatchAssets);
 
-    self._addEditor();
+    // self._addEditor();
 
     // Wait for our textures to load before continuing
     ige.on('texturesLoaded', function () {
@@ -38,6 +38,9 @@ var Client = IgeClass.extend({
           // a splash screen or a menu first? Then connect after you've
           // got a username or something?
           ige.network.start('http://localhost:2000', function () {
+            ige.network.debug(true);
+            ige.network.define('playerEntity', self._onPlayerEntity); // Defined in ./gameClasses/ClientNetworkEvents.js
+
             ige.network.addComponent(IgeStreamComponent)
               // Create a listener that will fire whenever an entity
               // is created because of the incoming stream data
@@ -45,7 +48,12 @@ var Client = IgeClass.extend({
                 console.log('Stream entity created with ID: ' + entity.id());
               });
 
-            ige.addGraph('IgeBaseScene');
+            ige.addGraph('GameScene');
+
+            // Ask the server to create an entity for us
+            ige.network.send('playerEntity');
+
+            // ige.editor.toggleStats();
           });
         }
       });

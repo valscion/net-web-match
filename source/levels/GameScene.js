@@ -6,7 +6,7 @@ var GameScene = IgeSceneGraph.extend({
    * @param options
    */
   addGraph: function (options) {
-    var self = ige;
+    var self = ige.isClient ? ige.client : ige.server;
 
     // Create the scene
     self.gameScene = new IgeScene2d()
@@ -21,50 +21,20 @@ var GameScene = IgeSceneGraph.extend({
       .mount(ige);
 
     // Create the background repeat scene
-    // self.backgroundScene = new IgeScene2d()
-    //   .id('backgroundScene')
-    //   .depth(0)
-    //   .ignoreCamera(true)
-    //   .backgroundPattern(ige.client.assets.backgroundPattern, 'repeat', true, true)
-    //   .mount(self.gameScene);
+    if (ige.isClient) {
+      self.backgroundScene = new IgeScene2d()
+        .id('backgroundScene')
+        .depth(-1)
+        .ignoreCamera(true)
+        .backgroundPattern(ige.client.assets.backgroundPattern, 'repeat', true, true)
+        .mount(self.gameScene);
+    }
 
-    // Create an entity and mount it to the scene
-    self.playerControl = new Character()
-      .id('player1')
-      .addComponent(PlayerControlledComponent)
-      .depth(1)
-      .translateTo(0, 0, 0)
-      .mount(self.gameScene);
-
-    // Setup physics for the player
-    self.playerControl
-      .box2dBody({
-        type: 'dynamic',
-        // Velocity is always set manually and unset when needed, so
-        // we don't want the physics engine to slow the player down
-        // unnecessarily. This way we will get similar velocity no
-        // matter what FPS the game is currently running on.
-        linearDamping: 0.0,
-        angularDamping: 0.0,
-        allowSleep: true,
-        bullet: false,
-        gravitic: false,
-        fixedRotation: false,
-        fixtures: [{
-          density: 1.0,
-          friction: 0.5,
-          restitution: 0,
-          shape: {
-            type: 'circle'
-          }
-        }]
-      });
-
-    this._addMap();
+    // this._addMap();
 
     // Tell the main viewport's camera to track the
     // character entity's movement
-    self.vp1.camera.trackTranslate(self.player, 0);
+    // self.vp1.camera.trackTranslate(self.player, 0);
 
     // Add the box2d debug painter entity to the
     // scene to show the box2d body outlines

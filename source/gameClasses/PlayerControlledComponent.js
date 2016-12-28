@@ -19,41 +19,42 @@ var PlayerControlledComponent = IgeClass.extend({
       down: false
     };
 
+    this._speed = 0.5;
+
     // Setup the control system
-    ige.input.mapAction('left', ige.input.key.a);
-    ige.input.mapAction('right', ige.input.key.d);
-    ige.input.mapAction('up', ige.input.key.w);
-    ige.input.mapAction('down', ige.input.key.s);
+    if (ige.isClient) {
+      ige.input.mapAction('left', ige.input.key.a);
+      ige.input.mapAction('right', ige.input.key.d);
+      ige.input.mapAction('up', ige.input.key.w);
+      ige.input.mapAction('down', ige.input.key.s);
+    }
 
     // Add the playerControlledComponent behaviours to the entity
-    this._entity
-      .addBehaviour('playerControlledComponent_keyboardBehaviour', this._keyboardBehaviour)
-      .addBehaviour('playerControlledComponent_mouseBehaviour', this._mouseBehaviour);
+    this._entity.addBehaviour('playerControlledComponent_behaviour', this._behaviour);
   },
 
-  _mouseBehaviour: function () {
-    this.rotateToPoint(ige._currentViewport.mousePos());
-  },
+  _behaviour: function () {
+    if (ige.isClient) {
+      this.rotateToPoint(ige._currentViewport.mousePos());
+    }
 
-  _keyboardBehaviour: function () {
     /* CEXCLUDE */
     if (ige.isServer) {
-      var b2dBody = this._box2dBody;
-      var b2dVel = new ige.box2d.b2Vec2(0, 0);
-
       if (this.playerControl.controls.left) {
-        b2dVel.x = -this.playerControl._speed;
+        this.velocity.x(-this.playerControl._speed);
       } else if (this.playerControl.controls.right) {
-        b2dVel.x = this.playerControl._speed;
+        this.velocity.x(this.playerControl._speed);
+      } else {
+        this.velocity.x(0);
       }
 
       if (this.playerControl.controls.up) {
-        b2dVel.y = -this.playerControl._speed;
+        this.velocity.y(-this.playerControl._speed);
       } else if (this.playerControl.controls.down) {
-        b2dVel.y = this.playerControl._speed;
+        this.velocity.y(this.playerControl._speed);
+      } else {
+        this.velocity.y(0);
       }
-
-      b2dBody.SetLinearVelocity(b2dVel);
     }
     /* CEXCLUDE */
 

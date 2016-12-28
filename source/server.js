@@ -9,9 +9,6 @@ var Server = IgeClass.extend({
     // Define an object to hold references to our player entities
     this.players = {};
 
-    // Define an array to hold our tile data
-    this.tileData = [];
-
     // Add the server-side game methods / event handlers
     this.implement(ServerNetworkEvents);
 
@@ -30,13 +27,6 @@ var Server = IgeClass.extend({
           // Check if the engine started successfully
           if (success) {
             // Create some network commands we will need
-            ige.network.define('gameTiles', function (data, clientId, requestId) {
-              console.log('Client gameTiles command received from client id "' + clientId + '" with data:', data);
-
-              // Send the tile data back
-              ige.network.response(requestId, self.tileData);
-            });
-
             ige.network.define('playerEntity', self._onPlayerEntity);
 
             ige.network.define('playerControlLeftDown', self._onPlayerLeftDown);
