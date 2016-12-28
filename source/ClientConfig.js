@@ -6,6 +6,7 @@ var igeClientConfig = {
     './levels/GameScene.js',
     './assets/NetMatchAssets.js',
 
+    './gameClasses/BulletPistol.js',
     './gameClasses/ClientNetworkEvents.js',
     './gameClasses/Character.js',
     './gameClasses/PlayerControlledComponent.js',

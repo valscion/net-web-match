@@ -47,3 +47,5 @@ var GameScene = IgeSceneGraph.extend({
     ige.$('gameScene').destroy();
   }
 });
+
+if (typeof(module) !== 'undefined' && typeof(module.exports) !== 'undefined') { module.exports = GameScene; }

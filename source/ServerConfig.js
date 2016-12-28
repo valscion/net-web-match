@@ -2,6 +2,7 @@ var igeConfig = {
   include: [
     {name: 'GameScene', path: './levels/GameScene'},
     {name: 'ServerNetworkEvents', path: './gameClasses/ServerNetworkEvents'},
+    {name: 'BulletPistol', path: './gameClasses/BulletPistol'},
     {name: 'Character', path: './gameClasses/Character'},
     {name: 'PlayerControlledComponent', path: './gameClasses/PlayerControlledComponent'}
   ]

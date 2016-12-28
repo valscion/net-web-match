@@ -16,7 +16,8 @@ var PlayerControlledComponent = IgeClass.extend({
       left: false,
       right: false,
       up: false,
-      down: false
+      down: false,
+      shoot: false
     };
 
     this.nextRotateTo = null;
@@ -54,6 +55,7 @@ var PlayerControlledComponent = IgeClass.extend({
       ige.input.mapAction('right', ige.input.key.d);
       ige.input.mapAction('up', ige.input.key.w);
       ige.input.mapAction('down', ige.input.key.s);
+      ige.input.mapAction('shoot', ige.input.key.space);
 
       ige.client.gameScene.mouseMove(this._onMouseMove);
     }
@@ -97,6 +99,21 @@ var PlayerControlledComponent = IgeClass.extend({
       if (playerControl.nextRotateTo) {
         this.rotateToPoint(playerControl.nextRotateTo);
         playerControl.nextRotateTo = null;
+      }
+
+      if (playerControl.controls.shoot) {
+        var char = this;
+        var pos = char.bounds2d();
+
+        new BulletPistol()
+          .translateTo(pos.x, pos.y, 0)
+          .rotateTo(0, 0, char.rotate().z())
+          .streamMode(1)
+          .lifeSpan(10000)
+          .mount(ige.$('gameScene'))
+          .fireAtWill();
+
+        playerControl.controls.shoot = false;
       }
     }
     /* CEXCLUDE */

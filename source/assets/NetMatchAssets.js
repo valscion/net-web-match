@@ -23,6 +23,11 @@ var NetMatchAssets = IgeClass.extend({
       launcher: new IgeTexture('./assets/textures/sprites/player6_2.png')
     };
 
+    // Load the bullets
+    self.bullets = {
+      pistol: new IgeTexture('./assets/textures/sprites/pistol_bullet.png')
+    };
+
     self.backgroundPattern =
       new IgeTexture('./assets/textures/background/backgroundPattern.png');
   }

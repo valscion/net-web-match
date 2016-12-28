@@ -29,7 +29,7 @@ var Server = IgeClass.extend({
             // Create some network commands we will need
             ige.network.define('playerEntity', self._onPlayerEntity);
 
-            ['left', 'right', 'up', 'down'].map(function (control) {
+            ['left', 'right', 'up', 'down', 'shoot'].map(function (control) {
               ige.network.define(
                 'playerControlDown.' + control,
                 self._createOnPlayerControlDown(control)

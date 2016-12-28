@@ -39,6 +39,15 @@ var Character = IgeEntityBox2d.extend({
     }
 
     return this;
+  },
+
+  /**
+   * Get the current weapon
+   *
+   * @returns {String} the type of the current weapon
+   */
+  weapon: function () {
+    return this._weapon;
   }
 });
 
