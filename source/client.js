@@ -21,7 +21,7 @@ var Client = IgeClass.extend({
     // Load the media for the game
     self.addComponent(NetMatchAssets);
 
-    // self._addEditor();
+    self._addEditor();
 
     // Wait for our textures to load before continuing
     ige.on('texturesLoaded', function () {
@@ -53,7 +53,7 @@ var Client = IgeClass.extend({
             // Ask the server to create an entity for us
             ige.network.send('playerEntity');
 
-            // ige.editor.toggleStats();
+            ige.editor.toggleStats();
           });
         }
       });
