@@ -39,44 +39,20 @@ var ServerNetworkEvents = {
     }
   },
 
-  _onPlayerLeftDown: function (data, clientId) {
-    console.log('_onPlayerLeftDown', data, clientId);
-    ige.server.players[clientId].playerControl.controls.left = true;
+  _createOnPlayerControlDown: function (control) {
+    return function (data, clientId) {
+      var player = ige.server.players[clientId];
+      player.log('ServerEvent/Control(' + control + ') DOWN');
+      player.playerControl.controls[control] = true;
+    }
   },
 
-  _onPlayerLeftUp: function (data, clientId) {
-    console.log('_onPlayerLeftUp', data, clientId);
-    ige.server.players[clientId].playerControl.controls.left = false;
-  },
-
-  _onPlayerRightDown: function (data, clientId) {
-    console.log('_onPlayerRightDown', data, clientId);
-    ige.server.players[clientId].playerControl.controls.right = true;
-  },
-
-  _onPlayerRightUp: function (data, clientId) {
-    console.log('_onPlayerRightUp', data, clientId);
-    ige.server.players[clientId].playerControl.controls.right = false;
-  },
-
-  _onPlayerUpDown: function (data, clientId) {
-    console.log('_onPlayerUpDown', data, clientId);
-    ige.server.players[clientId].playerControl.controls.up = true;
-  },
-
-  _onPlayerUpUp: function (data, clientId) {
-    console.log('_onPlayerUpUp', data, clientId);
-    ige.server.players[clientId].playerControl.controls.up = false;
-  },
-
-  _onPlayerDownDown: function (data, clientId) {
-    console.log('_onPlayerDownDown', data, clientId);
-    ige.server.players[clientId].playerControl.controls.down = true;
-  },
-
-  _onPlayerDownUp: function (data, clientId) {
-    console.log('_onPlayerDownUp', data, clientId);
-    ige.server.players[clientId].playerControl.controls.down = false;
+  _createOnPlayerControlUp: function (control) {
+    return function (data, clientId) {
+      var player = ige.server.players[clientId];
+      player.log('ServerEvent/Control(' + control + ') UP');
+      player.playerControl.controls[control] = false;
+    }
   },
 
   _onPlayerRotateTo: function (data, clientId) {

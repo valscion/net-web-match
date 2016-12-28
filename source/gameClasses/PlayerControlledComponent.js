@@ -72,104 +72,54 @@ var PlayerControlledComponent = IgeClass.extend({
   },
 
   _behaviour: function () {
+    var playerControl = this.playerControl;
+
     /* CEXCLUDE */
     if (ige.isServer) {
       var b2dBody = this._box2dBody;
       var b2dVel = new ige.box2d.b2Vec2(0, 0);
 
-      if (this.playerControl.controls.left) {
-        b2dVel.x = -this.playerControl._speed;
-      } else if (this.playerControl.controls.right) {
-        b2dVel.x = this.playerControl._speed;
+      if (playerControl.controls.left) {
+        b2dVel.x = -playerControl._speed;
+      } else if (playerControl.controls.right) {
+        b2dVel.x = playerControl._speed;
       }
 
-      if (this.playerControl.controls.up) {
-        b2dVel.y = -this.playerControl._speed;
-      } else if (this.playerControl.controls.down) {
-        b2dVel.y = this.playerControl._speed;
+      if (playerControl.controls.up) {
+        b2dVel.y = -playerControl._speed;
+      } else if (playerControl.controls.down) {
+        b2dVel.y = playerControl._speed;
       }
 
       b2dBody.SetLinearVelocity(b2dVel);
 
-      if (this.playerControl.nextRotateTo) {
-        this.rotateToPoint(this.playerControl.nextRotateTo);
-        this.playerControl.nextRotateTo = null;
+      if (playerControl.nextRotateTo) {
+        this.rotateToPoint(playerControl.nextRotateTo);
+        playerControl.nextRotateTo = null;
       }
     }
     /* CEXCLUDE */
 
     if (ige.isClient) {
-      if (ige.input.actionState('left')) {
-        if (!this.playerControl.controls.left) {
-          // Record the new state
-          this.playerControl.controls.left = true;
+      Object.keys(playerControl.controls).map(function(control) {
+        if (ige.input.actionState(control)) {
+          if (!playerControl.controls[control]) {
+            // Record the new state
+            playerControl.controls[control] = true;
 
-          // Tell the server about our control change
-          ige.network.send('playerControlLeftDown');
+            // Tell the server about our control change
+            ige.network.send('playerControlDown.' + control);
+          }
+        } else {
+          if (playerControl.controls[control]) {
+            // Record the new state
+            playerControl.controls[control] = false;
+
+            // Tell the server about our control change
+            ige.network.send('playerControlUp.' + control);
+          }
         }
-      } else {
-        if (this.playerControl.controls.left) {
-          // Record the new state
-          this.playerControl.controls.left = false;
-
-          // Tell the server about our control change
-          ige.network.send('playerControlLeftUp');
-        }
-      }
-
-      if (ige.input.actionState('right')) {
-        if (!this.playerControl.controls.right) {
-          // Record the new state
-          this.playerControl.controls.right = true;
-
-          // Tell the server about our control change
-          ige.network.send('playerControlRightDown');
-        }
-      } else {
-        if (this.playerControl.controls.right) {
-          // Record the new state
-          this.playerControl.controls.right = false;
-
-          // Tell the server about our control change
-          ige.network.send('playerControlRightUp');
-        }
-      }
-
-      if (ige.input.actionState('up')) {
-        if (!this.playerControl.controls.up) {
-          // Record the new state
-          this.playerControl.controls.up = true;
-
-          // Tell the server about our control change
-          ige.network.send('playerControlUpDown');
-        }
-      } else {
-        if (this.playerControl.controls.up) {
-          // Record the new state
-          this.playerControl.controls.up = false;
-
-          // Tell the server about our control change
-          ige.network.send('playerControlUpUp');
-        }
-      }
-
-      if (ige.input.actionState('down')) {
-        if (!this.playerControl.controls.down) {
-          // Record the new state
-          this.playerControl.controls.down = true;
-
-          // Tell the server about our control change
-          ige.network.send('playerControlDownDown');
-        }
-      } else {
-        if (this.playerControl.controls.down) {
-          // Record the new state
-          this.playerControl.controls.down = false;
-
-          // Tell the server about our control change
-          ige.network.send('playerControlDownUp');
-        }
-      }
+      });
     }
   }
 });

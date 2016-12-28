@@ -29,15 +29,16 @@ var Server = IgeClass.extend({
             // Create some network commands we will need
             ige.network.define('playerEntity', self._onPlayerEntity);
 
-            ige.network.define('playerControlLeftDown', self._onPlayerLeftDown);
-            ige.network.define('playerControlRightDown', self._onPlayerRightDown);
-            ige.network.define('playerControlUpDown', self._onPlayerUpDown);
-            ige.network.define('playerControlDownDown', self._onPlayerDownDown);
-
-            ige.network.define('playerControlLeftUp', self._onPlayerLeftUp);
-            ige.network.define('playerControlRightUp', self._onPlayerRightUp);
-            ige.network.define('playerControlUpUp', self._onPlayerUpUp);
-            ige.network.define('playerControlDownUp', self._onPlayerDownUp);
+            ['left', 'right', 'up', 'down'].map(function (control) {
+              ige.network.define(
+                'playerControlDown.' + control,
+                self._createOnPlayerControlDown(control)
+              );
+              ige.network.define(
+                'playerControlUp.' + control,
+                self._createOnPlayerControlUp(control)
+              );
+            });
 
             ige.network.define('playerControlRotateTo', self._onPlayerRotateTo);
 
