@@ -36,7 +36,7 @@ var PlayerControlledComponent = IgeClass.extend({
         allowSleep: true,
         bullet: false,
         gravitic: false,
-        fixedRotation: false,
+        fixedRotation: true,
         fixtures: [{
           density: 1.0,
           friction: 0.5,
