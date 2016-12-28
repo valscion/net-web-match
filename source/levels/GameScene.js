@@ -31,16 +31,6 @@ var GameScene = IgeSceneGraph.extend({
 
       ige.box2d.enableDebug(self.gameScene);
     }
-
-    // this._addMap();
-
-    // Tell the main viewport's camera to track the
-    // character entity's movement
-    // self.vp1.camera.trackTranslate(self.player, 0);
-
-    // Add the box2d debug painter entity to the
-    // scene to show the box2d body outlines
-    // ige.box2d.enableDebug(self.gameScene);
   },
 
   /**
@@ -55,30 +45,5 @@ var GameScene = IgeSceneGraph.extend({
     // 'gameScene' entity, destroying it will remove everything we
     // added to it.
     ige.$('gameScene').destroy();
-  },
-
-  _addMap: function () {
-    var self = ige;
-    var bodyDeclaration = {
-      type: 'static',
-      allowSleep: true,
-      fixtures: [{
-        shape: {
-          type: 'rectangle'
-        }
-      }]
-    };
-
-    [
-      new IgeEntityBox2d().translateTo(0, 150, 0).width(500).height(40),
-      new IgeEntityBox2d().translateTo(0, -150, 0).width(500).height(40),
-      new IgeEntityBox2d().translateTo(230, 0, 0).width(40).height(260),
-      new IgeEntityBox2d().translateTo(-230, 0, 0).width(40).height(260),
-    ].map(function (box) {
-      box
-        .drawBounds(true)
-        .mount(self.gameScene)
-        .box2dBody(bodyDeclaration);
-    });
   }
 });
