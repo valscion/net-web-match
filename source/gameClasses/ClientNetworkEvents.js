@@ -16,14 +16,12 @@ var ClientNetworkEvents = {
       // Track our player with the camera
       ige.client.vp1.camera.trackTranslate(ige.$(data), 10);
     } else {
-      console.log('Uli, tuli uus');
       // The client has not yet received the entity via the network
       // stream so lets ask the stream to tell us when it creates a
       // new entity and then check if that entity is the one we
       // should be tracking!
       var self = this;
       self._eventListener = ige.network.stream.on('entityCreated', function (entity) {
-        console.log('Entiteetti tuli!', entity);
         if (entity.id() === data) {
           // Add the player control component
           ige.$(data).addComponent(PlayerControlledComponent);
