@@ -92,6 +92,7 @@ var PlayerControlledComponent = IgeClass.extend({
       }
 
       b2dBody.SetLinearVelocity(b2dVel);
+      b2dBody.SetAwake(true);
 
       if (playerControl.nextRotateTo) {
         this.rotateToPoint(playerControl.nextRotateTo);
