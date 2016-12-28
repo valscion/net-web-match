@@ -12,11 +12,11 @@ var Client = IgeClass.extend({
     this.implement(ClientNetworkEvents);
 
     // Add physics and setup physics world
-    // ige.addComponent(IgeBox2dComponent)
-    //   .box2d.sleep(true)
-    //   .box2d.createWorld()
-    //   .box2d.networkDebugMode(true)
-    //   .box2d.start();
+    ige.addComponent(IgeBox2dComponent)
+      .box2d.sleep(true)
+      .box2d.createWorld()
+      .box2d.networkDebugMode(true)
+      .box2d.start();
 
     // Load the media for the game
     self.addComponent(NetMatchAssets);
