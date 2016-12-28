@@ -14,7 +14,7 @@ var ClientNetworkEvents = {
       ige.$(data).addComponent(PlayerControlledComponent);
 
       // Track our player with the camera
-      ige.client.vp1.camera.trackTranslate(ige.$(data), 0);
+      ige.client.vp1.camera.trackTranslate(ige.$(data), 10);
     } else {
       console.log('Uli, tuli uus');
       // The client has not yet received the entity via the network
@@ -29,7 +29,7 @@ var ClientNetworkEvents = {
           ige.$(data).addComponent(PlayerControlledComponent);
 
           // Tell the camera to track out player entity
-          ige.client.vp1.camera.trackTranslate(ige.$(data), 0);
+          ige.client.vp1.camera.trackTranslate(ige.$(data), 10);
 
           // Turn off the listener for this event now that we
           // have found and started tracking our player entity
