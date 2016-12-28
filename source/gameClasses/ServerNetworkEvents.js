@@ -101,6 +101,10 @@ var ServerNetworkEvents = {
   _onPlayerDownUp: function (data, clientId) {
     console.log('_onPlayerDownUp', data, clientId);
     ige.server.players[clientId].playerControl.controls.down = false;
+  },
+
+  _onPlayerRotateTo: function (data, clientId) {
+    ige.server.players[clientId].playerControl.nextRotateTo = data;
   }
 };
 

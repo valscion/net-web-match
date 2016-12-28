@@ -19,6 +19,8 @@ var PlayerControlledComponent = IgeClass.extend({
       down: false
     };
 
+    this.nextRotateTo = null;
+
     this._speed = 0.5;
 
     // Setup the control system
@@ -27,17 +29,24 @@ var PlayerControlledComponent = IgeClass.extend({
       ige.input.mapAction('right', ige.input.key.d);
       ige.input.mapAction('up', ige.input.key.w);
       ige.input.mapAction('down', ige.input.key.s);
+
+      ige.client.gameScene.mouseMove(this._onMouseMove);
     }
 
     // Add the playerControlledComponent behaviours to the entity
     this._entity.addBehaviour('playerControlledComponent_behaviour', this._behaviour);
   },
 
-  _behaviour: function () {
-    if (ige.isClient) {
-      this.rotateToPoint(ige._currentViewport.mousePos());
-    }
+  _onMouseMove: function () {
+    var mp = ige._currentViewport.mousePos();
+    var pos = {
+      x: mp.x,
+      y: mp.y
+    };
+    ige.network.send('playerControlRotateTo', pos);
+  },
 
+  _behaviour: function () {
     /* CEXCLUDE */
     if (ige.isServer) {
       if (this.playerControl.controls.left) {
@@ -54,6 +63,10 @@ var PlayerControlledComponent = IgeClass.extend({
         this.velocity.y(this.playerControl._speed);
       } else {
         this.velocity.y(0);
+      }
+
+      if (this.playerControl.nextRotateTo) {
+        this.rotateToPoint(this.playerControl.nextRotateTo);
       }
     }
     /* CEXCLUDE */

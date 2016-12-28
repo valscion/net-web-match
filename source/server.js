@@ -39,6 +39,8 @@ var Server = IgeClass.extend({
             ige.network.define('playerControlUpUp', self._onPlayerUpUp);
             ige.network.define('playerControlDownUp', self._onPlayerDownUp);
 
+            ige.network.define('playerControlRotateTo', self._onPlayerRotateTo);
+
             ige.network.on('connect', self._onPlayerConnect); // Defined in ./gameClasses/ServerNetworkEvents.js
             ige.network.on('disconnect', self._onPlayerDisconnect); // Defined in ./gameClasses/ServerNetworkEvents.js
 
