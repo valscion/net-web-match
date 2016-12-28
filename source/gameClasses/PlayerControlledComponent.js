@@ -93,6 +93,7 @@ var PlayerControlledComponent = IgeClass.extend({
 
       if (this.playerControl.nextRotateTo) {
         this.rotateToPoint(this.playerControl.nextRotateTo);
+        this.playerControl.nextRotateTo = null;
       }
     }
     /* CEXCLUDE */
