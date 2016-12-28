@@ -21,30 +21,32 @@ var PlayerControlledComponent = IgeClass.extend({
 
     this.nextRotateTo = null;
 
-    this._speed = 0.5;
+    this._speed = 5;
 
     // Setup physics for the player
-    this._entity.box2dBody({
-      type: 'dynamic',
-      // Velocity is always set manually and unset when needed, so
-      // we don't want the physics engine to slow the player down
-      // unnecessarily. This way we will get similar velocity no
-      // matter what FPS the game is currently running on.
-      linearDamping: 0.0,
-      angularDamping: 0.0,
-      allowSleep: true,
-      bullet: false,
-      gravitic: false,
-      fixedRotation: false,
-      fixtures: [{
-        density: 1.0,
-        friction: 0.5,
-        restitution: 0,
-        shape: {
-          type: 'circle'
-        }
-      }]
-    });
+    if (ige.isServer) {
+      this._entity.box2dBody({
+        type: 'dynamic',
+        // Velocity is always set manually and unset when needed, so
+        // we don't want the physics engine to slow the player down
+        // unnecessarily. This way we will get similar velocity no
+        // matter what FPS the game is currently running on.
+        linearDamping: 0.0,
+        angularDamping: 0.0,
+        allowSleep: true,
+        bullet: false,
+        gravitic: false,
+        fixedRotation: false,
+        fixtures: [{
+          density: 1.0,
+          friction: 0.5,
+          restitution: 0,
+          shape: {
+            type: 'circle'
+          }
+        }]
+      });
+    }
 
     // Setup the control system
     if (ige.isClient) {
@@ -72,21 +74,22 @@ var PlayerControlledComponent = IgeClass.extend({
   _behaviour: function () {
     /* CEXCLUDE */
     if (ige.isServer) {
+      var b2dBody = this._box2dBody;
+      var b2dVel = new ige.box2d.b2Vec2(0, 0);
+
       if (this.playerControl.controls.left) {
-        this.velocity.x(-this.playerControl._speed);
+        b2dVel.x = -this.playerControl._speed;
       } else if (this.playerControl.controls.right) {
-        this.velocity.x(this.playerControl._speed);
-      } else {
-        this.velocity.x(0);
+        b2dVel.x = this.playerControl._speed;
       }
 
       if (this.playerControl.controls.up) {
-        this.velocity.y(-this.playerControl._speed);
+        b2dVel.y = -this.playerControl._speed;
       } else if (this.playerControl.controls.down) {
-        this.velocity.y(this.playerControl._speed);
-      } else {
-        this.velocity.y(0);
+        b2dVel.y = this.playerControl._speed;
       }
+
+      b2dBody.SetLinearVelocity(b2dVel);
 
       if (this.playerControl.nextRotateTo) {
         this.rotateToPoint(this.playerControl.nextRotateTo);
