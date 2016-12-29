@@ -28,8 +28,6 @@ var GameScene = IgeSceneGraph.extend({
         .ignoreCamera(true)
         .backgroundPattern(ige.client.assets.backgroundPattern, 'repeat', true, true)
         .mount(self.gameScene);
-
-      ige.box2d.enableDebug(self.gameScene);
     }
   },
 
