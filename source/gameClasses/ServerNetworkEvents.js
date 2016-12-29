@@ -8,13 +8,11 @@ var ServerNetworkEvents = {
    * @private
    */
   _onPlayerConnect: function (socket) {
-    console.log('_onPlayerConnect', socket);
     // Don't reject the client connection
     return false;
   },
 
   _onPlayerDisconnect: function (clientId) {
-    console.log('_onPlayerDisconnect', clientId);
     if (ige.server.players[clientId]) {
       // Remove the player from the game
       ige.server.players[clientId].destroy();
@@ -26,7 +24,6 @@ var ServerNetworkEvents = {
   },
 
   _onPlayerEntity: function (data, clientId) {
-    console.log('_onPlayerEntity', data, clientId);
     if (!ige.server.players[clientId]) {
       ige.server.players[clientId] = new Character()
         .id(clientId)
