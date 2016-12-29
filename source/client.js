@@ -15,7 +15,7 @@ var Client = IgeClass.extend({
     self.addComponent(NetMatchAssets);
 
     // Load the weapons data
-    self.addComponent(Weapon);
+    ige.addComponent(Weapon);
 
     self._addEditor();
 

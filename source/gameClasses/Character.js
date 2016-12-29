@@ -34,7 +34,7 @@ var Character = IgeEntityBox2d.extend({
       this._weapon = weapon;
 
       if (ige.isClient) {
-        this.texture(ige.client.weapon.getProp(weapon, 'character'));
+        this.texture(ige.weapon.getProp(weapon, 'character'));
       }
     }
 
