@@ -37,7 +37,7 @@ var Client = IgeClass.extend({
           // than before the scene etc are created... maybe you want
           // a splash screen or a menu first? Then connect after you've
           // got a username or something?
-          ige.network.start('http://localhost:2000', function () {
+          ige.network.start('http://' + location.hostname + ':2000', function () {
             ige.network.debug(true);
             ige.network.define('playerEntity', self._onPlayerEntity); // Defined in ./gameClasses/ClientNetworkEvents.js
 
