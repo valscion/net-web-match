@@ -7,7 +7,9 @@ var BulletPistol = IgeEntityBox2d.extend({
     // Setup size
     this.width(4).height(4);
 
-    this._setupPhysics();
+    if (ige.isServer) {
+      this._setupPhysics();
+    }
 
     // Add the bullet texture
     if (ige.isClient) {
