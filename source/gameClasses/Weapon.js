@@ -15,34 +15,34 @@ var Weapon = IgeClass.extend({
       'pistol'
     ];
 
-    self.PROPERTIES = [
-      'character',   // Pelihahmon objekti
-      'reloadtime',  // Aseen latausaika
-      'bullet',      // Ammusobjekti
-      'shootsound',  // Ampumisen ääni
-      'hitsound',    // Osuman ääni
-      'bulletspeed', // Ammuksen lentonopeus
-      'bulletForth', // Ammuksen lähtöpaikka pelaajan etupuolella
-      'bulletYaw',   // Ammuksen lähtöpaikka sivusuunnassa
-      'damage',      // Ammuksen aiheuttama tuho
-      'damagerange', // Tuhoalueen laajuus
-      'spread',      // Hajonta asteina
-      'animImage',   // Animaatiokuva kun osuu
-      'animLength',  // Animaation pituus
-      'animDelay',   // Animaation viive
-      'image',       // Aseen infokuva
-      'ammo',        // Aseessa olevat ammukset
-      'ammoMax',     // Ammusten maksimimäärä
-      'fire',        // Suuliekkianimaatio
-      'firepos',     // Missä kohdassa suuliekki näytetään (pituussuunnassa)
-      'icon',        // Pieni ikoni tappoviesteihin
-      'pickcount',   // Kuinka paljon tavaraa saa poimittaessa
-      'key',         // Näppäin jolla tämä ase valitaan
-      'saferange',   // Etäisyys jonka alle kohteesta oleva botti ei ammu
-      'shootrange',  // Etäisyys jonka alle kohteesta oleva botti ampuu
-      'character2',  // Pelihahmon objekti (tiimi 2)
-      'weight'       // Aseen paino, vaikuttaa liikkumisen nopeuteen. 100=normaali
-    ];
+    self.PROPERTIES = {
+      character: 'texture',  // Pelihahmon objekti
+      reloadtime: 'scalar',  // Aseen latausaika
+      bullet: 'texture',     // Ammusobjekti
+      shootsound: 'scalar',  // Ampumisen ääni
+      hitsound: 'scalar',    // Osuman ääni
+      bulletspeed: 'scalar', // Ammuksen lentonopeus
+      bulletForth: 'scalar', // Ammuksen lähtöpaikka pelaajan etupuolella
+      bulletYaw: 'scalar',   // Ammuksen lähtöpaikka sivusuunnassa
+      damage: 'scalar',      // Ammuksen aiheuttama tuho
+      damagerange: 'scalar', // Tuhoalueen laajuus
+      spread: 'scalar',      // Hajonta asteina
+      animImage: 'texture',  // Animaatiokuva kun osuu
+      animLength: 'scalar',  // Animaation pituus
+      animDelay: 'scalar',   // Animaation viive
+      image: 'texture',      // Aseen infokuva
+      ammo: 'scalar',        // Aseessa olevat ammukset
+      ammoMax: 'scalar',     // Ammusten maksimimäärä
+      fire: 'texture',       // Suuliekkianimaatio
+      firepos: 'scalar',     // Missä kohdassa suuliekki näytetään (pituussuunnassa)
+      icon: 'texture',       // Pieni ikoni tappoviesteihin
+      pickcount: 'scalar',   // Kuinka paljon tavaraa saa poimittaessa
+      key: 'scalar',         // Näppäin jolla tämä ase valitaan
+      saferange: 'scalar',   // Etäisyys jonka alle kohteesta oleva botti ei ammu
+      shootrange: 'scalar',  // Etäisyys jonka alle kohteesta oleva botti ampuu
+      character2: 'texture', // Pelihahmon objekti (tiimi 2)
+      weight: 'scalar'       // Aseen paino, vaikuttaa liikkumisen nopeuteen. 100=normaali
+    };
 
     self.defineGun('pistol', {
       reloadtime: 250,
@@ -54,16 +54,16 @@ var Weapon = IgeClass.extend({
       spread: 0,
       ammo: 0,
       ammoMax: 0,
-      image: new IgeTexture('./assets/textures/sprites/pistol.png'),
-      bullet: new IgeTexture('./assets/textures/sprites/pistol_bullet.png'),
-      character: new IgeTexture('./assets/textures/sprites/player1.png'),
-      character2: new IgeTexture('./assets/textures/sprites/player1_2.png'),
+      image: './assets/textures/sprites/pistol.png',
+      bullet: './assets/textures/sprites/pistol_bullet.png',
+      character: './assets/textures/sprites/player1.png',
+      character2: './assets/textures/sprites/player1_2.png',
       // TODO: Sounds
       // shootsound: SND_SHOOT1,
       // hitsound: SND_BULLETHIT1,
-      fire: new IgeTexture('./assets/textures/sprites/fire1.png'),
+      fire: './assets/textures/sprites/fire1.png',
       firepos: 33,
-      icon: new IgeTexture('./assets/textures/sprites/pistol_small.png'),
+      icon: './assets/textures/sprites/pistol_small.png',
       // TODO: Input mapping
       // key: cbKey1,
       saferange: 100,
@@ -84,11 +84,24 @@ var Weapon = IgeClass.extend({
     this._data[name] = data = {};
 
     Object.keys(properties).map(function (prop) {
-      if (!PROPERTIES.includes(prop)) {
+      var value;
+      var propType = PROPERTIES[prop];
+      if (!propType) {
         this.log(name + ' is not a valid property for a weapon', 'error');
         return;
       }
-      data[prop] = properties[prop];
+
+      switch (propType) {
+        case 'scalar':
+          value = properties[prop];
+          break;
+        case 'texture':
+          value = new IgeTexture(properties[prop]);
+          break;
+        default:
+          this.log('Unknown property type ' + propType, 'error');
+      }
+      data[prop] = value;
     });
   },
 
