@@ -27,9 +27,7 @@ var BulletPistol = IgeEntityBox2d.extend({
       gravitic: false,
       fixedRotation: true,
       fixtures: [{
-        density: 1.0,
-        friction: 0.5,
-        restitution: 0.2,
+        density: 0.05,
         shape: {
           type: 'rectangle'
         }
