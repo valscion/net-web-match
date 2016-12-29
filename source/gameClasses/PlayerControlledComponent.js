@@ -117,7 +117,7 @@ var PlayerControlledComponent = IgeClass.extend({
           .translateTo(x, y, 0)
           .rotateTo(0, 0, rot)
           .streamMode(1)
-          .lifeSpan(10000)
+          .lifeSpan(2000)
           .mount(ige.$('gameScene'))
           .fireAtWill();
 
