@@ -95,7 +95,9 @@ var Weapon = IgeClass.extend({
             value = properties[prop];
             break;
           case 'texture':
-            value = new IgeTexture(properties[prop]);
+            if (ige.isClient) {
+              value = new IgeTexture(properties[prop]);
+            }
             break;
           default:
             this.log('Unknown property type ' + propType, 'error');
