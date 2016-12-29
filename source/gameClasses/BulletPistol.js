@@ -38,7 +38,8 @@ var BulletPistol = IgeEntityBox2d.extend({
   },
 
   fireAtWill: function () {
-    var speed = 20;
+    var physicsUpdateRate = 60.0;
+    var speed = ige.weapon.getProp('pistol', 'bulletspeed') / physicsUpdateRate;
     var rot = this.rotate().z();
     var b2dBody = this._box2dBody;
     var b2dVel = new ige.box2d.b2Vec2(speed * Math.cos(rot), speed * Math.sin(rot));
