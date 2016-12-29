@@ -7,6 +7,7 @@ var igeClientConfig = {
     './assets/NetMatchAssets.js',
 
     './gameClasses/BulletPistol.js',
+    './gameClasses/Weapon.js',
     './gameClasses/ClientNetworkEvents.js',
     './gameClasses/Character.js',
     './gameClasses/PlayerControlledComponent.js',

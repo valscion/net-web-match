@@ -13,7 +13,7 @@ var BulletPistol = IgeEntityBox2d.extend({
 
     // Add the bullet texture
     if (ige.isClient) {
-      this.texture(ige.client.assets.bullets.pistol);
+      this.texture(ige.client.weapon.bulletFor('pistol'));
     }
   },
 

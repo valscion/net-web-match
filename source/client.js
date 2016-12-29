@@ -14,6 +14,9 @@ var Client = IgeClass.extend({
     // Load the media for the game
     self.addComponent(NetMatchAssets);
 
+    // Load the weapons data
+    self.addComponent(Weapon);
+
     self._addEditor();
 
     var host = location.hostname;
