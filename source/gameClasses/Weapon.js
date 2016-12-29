@@ -83,52 +83,33 @@ var Weapon = IgeClass.extend({
 
     this._data[name] = data = {};
 
-    Object.keys(properties).map(function (prop) {
+    Object.keys(PROPERTIES).map(function (prop) {
       var value;
       var propType = PROPERTIES[prop];
-      if (!propType) {
-        this.log(name + ' is not a valid property for a weapon', 'error');
-        return;
+
+      if (properties[prop] === undefined) {
+        value = null;
+      } else {
+        switch (propType) {
+          case 'scalar':
+            value = properties[prop];
+            break;
+          case 'texture':
+            value = new IgeTexture(properties[prop]);
+            break;
+          default:
+            this.log('Unknown property type ' + propType, 'error');
+        }
       }
 
-      switch (propType) {
-        case 'scalar':
-          value = properties[prop];
-          break;
-        case 'texture':
-          value = new IgeTexture(properties[prop]);
-          break;
-        default:
-          this.log('Unknown property type ' + propType, 'error');
-      }
       data[prop] = value;
     });
   },
 
   /**
-   * Get the texture for a character wielding a weapon
+   * Get a property for a weapon
    */
-  characterFor: function (weaponName, team) {
-    var data = this._data[weaponName];
-    var accessor = team === 2 ? 'character2' : 'character';
-
-    if (!data) {
-      this.log(weaponName + ' is not a recognized weapon', 'error');
-      return;
-    }
-
-    if (!data[accessor]) {
-      this.log(weaponName + ' does not have a character texture', 'error');
-      return;
-    }
-
-    return data[accessor];
-  },
-
-  /**
-   * Get the texture for a bullet
-   */
-  bulletFor: function (weaponName) {
+  getProp: function (weaponName, propName) {
     var data = this._data[weaponName];
 
     if (!data) {
@@ -136,12 +117,12 @@ var Weapon = IgeClass.extend({
       return;
     }
 
-    if (!data.bullet) {
-      this.log(weaponName + ' does not have a bullet texture', 'error');
+    if (data[propName] === undefined) {
+      this.log(propName + ' is not a recognized property for a weapon', 'error');
       return;
     }
 
-    return data.bullet;
+    return data[propName];
   }
 });
 
