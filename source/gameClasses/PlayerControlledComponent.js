@@ -24,6 +24,8 @@ var PlayerControlledComponent = IgeClass.extend({
 
     this._speed = 5;
 
+    this._shootedWithLeftHand = false;
+
     // Setup physics for the player
     if (ige.isServer) {
       this._entity.box2dBody({
@@ -103,16 +105,23 @@ var PlayerControlledComponent = IgeClass.extend({
 
       if (playerControl.controls.shoot) {
         var char = this;
-        var pos = char.bounds2d();
+        var handFactor = playerControl._shootedWithLeftHand ? 1 : -1;
+        var pos = char.worldPosition();
+        var rot = char.rotate().z() - Math.radians(90);
+        var xFact = Math.cos(rot);
+        var yFact = Math.sin(rot);
+        var x = pos.x + Math.cos(rot) * 33 + Math.cos(rot - Math.radians(90)) * 10 * handFactor;
+        var y = pos.y + Math.sin(rot) * 33 + Math.sin(rot - Math.radians(90)) * 10 * handFactor;
 
         new BulletPistol()
-          .translateTo(pos.x, pos.y, 0)
-          .rotateTo(0, 0, char.rotate().z())
+          .translateTo(x, y, 0)
+          .rotateTo(0, 0, rot)
           .streamMode(1)
           .lifeSpan(10000)
           .mount(ige.$('gameScene'))
           .fireAtWill();
 
+        playerControl._shootedWithLeftHand = !playerControl._shootedWithLeftHand;
         playerControl.controls.shoot = false;
       }
     }
