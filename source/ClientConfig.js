@@ -4,7 +4,6 @@ var igeClientConfig = {
 
     /* Your custom game JS scripts */
     './levels/GameScene.js',
-    './assets/NetMatchAssets.js',
     './maps/test.js',
 
     './gameClasses/BulletPistol.js',

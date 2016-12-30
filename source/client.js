@@ -11,9 +11,6 @@ var Client = IgeClass.extend({
     // Implement our game methods
     this.implement(ClientNetworkEvents);
 
-    // Load the media for the game
-    self.addComponent(NetMatchAssets);
-
     // Load the weapons data
     ige.addComponent(Weapon);
 
