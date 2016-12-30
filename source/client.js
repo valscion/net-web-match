@@ -42,7 +42,7 @@ var Client = IgeClass.extend({
               // Create a listener that will fire whenever an entity
               // is created because of the incoming stream data
               .stream.on('entityCreated', function (entity) {
-                console.log('Stream entity created with ID: ' + entity.id());
+                // console.log('Stream entity created with ID: ' + entity.id());
               });
 
             ige.addGraph('GameScene');
