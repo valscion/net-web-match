@@ -38,7 +38,7 @@ var Client = IgeClass.extend({
           // a splash screen or a menu first? Then connect after you've
           // got a username or something?
           ige.network.start(serverUrl, function () {
-            ige.network.debug(true);
+            ige.network.debug(false);
             ige.network.define('playerEntity', self._onPlayerEntity); // Defined in ./gameClasses/ClientNetworkEvents.js
 
             ige.network.addComponent(IgeStreamComponent)
