@@ -28,7 +28,7 @@ var GameScene = IgeSceneGraph.extend({
 
     // Load the tiled map data and handle the return data
     self.addComponent(IgeTiledComponent);
-    self.tiled.loadJson(tiledTestMap, function (layerArray, layersById) {
+    self.tiled.loadJson(this._tiledMap('TiledTestMap'), function (layerArray, layersById) {
       if (ige.isServer) {
         // Create static box2d objects from the collision layer
         ige.box2d.staticsFromMap(layersById.WallLayer);
@@ -66,6 +66,25 @@ var GameScene = IgeSceneGraph.extend({
     // 'gameScene' entity, destroying it will remove everything we
     // added to it.
     ige.$('gameScene').destroy();
+  },
+
+  _tiledMap: function (mapName) {
+    var allTiledMaps = ige.isClient ? TileMaps : global;
+    var map = allTiledMaps[mapName];
+
+    if (!map) {
+      this.log('Map with name "' + mapName + '" was not found!', 'error');
+      return null;
+    }
+
+    // Fix tileset image paths to be loadable
+    return Object.assign({}, map, {
+      tilesets: map.tilesets.map(function (tileset) {
+        return Object.assign({}, tileset, {
+          image: "./maps/" + mapName + "/" + tileset.image
+        });
+      })
+    })
   }
 });
 

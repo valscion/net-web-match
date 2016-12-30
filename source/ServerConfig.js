@@ -7,7 +7,7 @@ var igeConfig = {
     {name: 'Character', path: './gameClasses/Character'},
     {name: 'PlayerControlledComponent', path: './gameClasses/PlayerControlledComponent'},
 
-    {name: 'tiledTestMap', path: './maps/test'}
+    {name: 'TiledTestMap', path: './maps/TiledTestMap/TiledTestMap'}
   ]
 };
 
