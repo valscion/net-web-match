@@ -69,23 +69,22 @@ var PlayerComponent = IgeClass.extend({
 
     /* CEXCLUDE */
     if (ige.isServer) {
-      var b2dBody = this._box2dBody;
-      var b2dVel = new ige.box2d.b2Vec2(0, 0);
+      let velocityX = 0;
+      let velocityY = 0;
 
       if (playerControl.controls.left) {
-        b2dVel.x = -playerControl._speed;
+        velocityX = -playerControl._speed;
       } else if (playerControl.controls.right) {
-        b2dVel.x = playerControl._speed;
+        velocityX = playerControl._speed;
       }
 
       if (playerControl.controls.up) {
-        b2dVel.y = -playerControl._speed;
+        velocityY = -playerControl._speed;
       } else if (playerControl.controls.down) {
-        b2dVel.y = playerControl._speed;
+        velocityY = playerControl._speed;
       }
 
-      b2dBody.SetLinearVelocity(b2dVel);
-      b2dBody.SetAwake(true);
+      this.translateCharacter(velocityX, velocityY);
 
       if (playerControl.nextRotateTo) {
         this.rotateToPoint(playerControl.nextRotateTo);

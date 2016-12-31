@@ -82,6 +82,17 @@ var Character = IgeEntityBox2d.extend({
    */
   weapon: function () {
     return this._weapon;
+  },
+
+  /**
+   * Translates the character by applying a physical force to the box2d body
+   */
+  translateCharacter: function (speedX, speedY) {
+    var b2dBody = this._box2dBody;
+    var b2dVel = new ige.box2d.b2Vec2(speedX, speedY);
+
+    b2dBody.SetLinearVelocity(b2dVel);
+    b2dBody.SetAwake(true);
   }
 });
 
