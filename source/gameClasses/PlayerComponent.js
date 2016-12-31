@@ -1,6 +1,20 @@
 /**
- * Adds keyboard and mouse control to the entity this component is added to.
- * @type {IgeClass}
+ * Definition for a player controlled component. This is added to
+ * an entity for it to be controllable by the player.
+ *
+ * This class does not have any physics or visual definitions for
+ * the underlying entity. This only has the code related to
+ * interacting with the entity as a player.
+ *
+ * There are two kinds of interaction setup here:
+ *  - Input mapping on client, which sends commands to server for
+ *    actual movement processing
+ *  - Control state checking on the server, which applies movement
+ *    to the underlying entity
+ *
+ * All the movement etc. that happens on the server side is
+ * automatically streamed to all connected clients. As long as all
+ * the movement is happening on the server side, everything is a-OK
  */
 var PlayerComponent = IgeClass.extend({
   classId: 'PlayerComponent',

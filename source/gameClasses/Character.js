@@ -1,3 +1,9 @@
+/**
+ * The definition for a game character. This entity is the one that
+ * is rendered and has physics applied, but for moving it one must
+ * add a control component, such as {PlayerComponent}, to the entity
+ * so that the character would start moving.
+ */
 var Character = IgeEntityBox2d.extend({
   classId: 'Character',
 
