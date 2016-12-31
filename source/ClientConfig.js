@@ -8,6 +8,7 @@ var igeClientConfig = {
     './maps/TiledTestMap/TiledTestMap.js',
 
     './gameClasses/BulletPistol.js',
+    './gameClasses/Circle.js',
     './gameClasses/Weapon.js',
     './gameClasses/ClientNetworkEvents.js',
     './gameClasses/Character.js',
