@@ -60,7 +60,9 @@ var GameScene = IgeScene2d.extend({
    * Adds a new player character to the scene
    */
   addPlayerToScene: function (clientId) {
-    var freePos = this._nextUnoccupiedPosition();
+    // TODO: Calculate freePos by center without duplicating
+    //       the radius of a Character here.
+    var freePos = this._nextUnoccupiedPosition().addPoint({x: 19, y: 19});
 
     var player = new Character()
       .id(clientId)
@@ -75,7 +77,9 @@ var GameScene = IgeScene2d.extend({
    * Adds a new bot character to the scene
    */
   addBotToScene: function (botName) {
-    var freePos = this._nextUnoccupiedPosition();
+    // TODO: Calculate freePos by center without duplicating
+    //       the radius of a Character here.
+    var freePos = this._nextUnoccupiedPosition().addPoint({x: 19, y: 19});
 
     var bot = new Character()
       .id(botName)
