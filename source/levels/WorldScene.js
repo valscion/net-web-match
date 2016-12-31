@@ -44,7 +44,6 @@ var WorldScene = IgeSceneGraph.extend({
             .tileWidth(40)
             .tileHeight(40)
             .autoSection(20)
-            //.isometricMounts(false)
             .drawBounds(true)
             .drawBoundsData(false)
             .mount(self.backgroundScene);
