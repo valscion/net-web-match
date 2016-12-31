@@ -11,7 +11,7 @@ var igeClientConfig = {
     './gameClasses/Weapon.js',
     './gameClasses/ClientNetworkEvents.js',
     './gameClasses/Character.js',
-    './gameClasses/PlayerControlledComponent.js',
+    './gameClasses/PlayerComponent.js',
 
     /* Standard game scripts */
     './client.js',

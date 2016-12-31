@@ -64,7 +64,7 @@ var GameScene = IgeScene2d.extend({
 
     var player = new Character()
       .id(clientId)
-      .addComponent(PlayerControlledComponent)
+      .addComponent(PlayerComponent)
       .translateTo(freePos.x, freePos.y, 0)
       .mount(this);
 

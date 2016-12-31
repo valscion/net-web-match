@@ -2,8 +2,8 @@
  * Adds keyboard and mouse control to the entity this component is added to.
  * @type {IgeClass}
  */
-var PlayerControlledComponent = IgeClass.extend({
-  classId: 'PlayerControlledComponent',
+var PlayerComponent = IgeClass.extend({
+  classId: 'PlayerComponent',
   componentId: 'playerControl',
 
   init: function (entity, options) {
@@ -151,4 +151,4 @@ var PlayerControlledComponent = IgeClass.extend({
   }
 });
 
-if (typeof(module) !== 'undefined' && typeof(module.exports) !== 'undefined') { module.exports = PlayerControlledComponent; }
+if (typeof(module) !== 'undefined' && typeof(module.exports) !== 'undefined') { module.exports = PlayerComponent; }

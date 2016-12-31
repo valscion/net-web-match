@@ -11,7 +11,7 @@ var ClientNetworkEvents = {
     console.log('_onPlayerEntity', data);
     if (ige.$(data)) {
       // Add the player control component
-      ige.$(data).addComponent(PlayerControlledComponent);
+      ige.$(data).addComponent(PlayerComponent);
 
       // Track our player with the camera
       ige.client.vp1.camera.lookAt(ige.$(data));
@@ -25,7 +25,7 @@ var ClientNetworkEvents = {
       self._eventListener = ige.network.stream.on('entityCreated', function (entity) {
         if (entity.id() === data) {
           // Add the player control component
-          ige.$(data).addComponent(PlayerControlledComponent);
+          ige.$(data).addComponent(PlayerComponent);
 
           // Tell the camera to track out player entity
           ige.client.vp1.camera.lookAt(ige.$(data));
