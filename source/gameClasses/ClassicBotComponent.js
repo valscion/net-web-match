@@ -81,8 +81,8 @@ var ClassicBotComponent = IgeClass.extend({
       if (closestHit) {
         new Circle()
           .translateTo(
-            closestHit.point.x * scaleRatio,
-            closestHit.point.y * scaleRatio,
+            closestHit.hitPoint.x * scaleRatio,
+            closestHit.hitPoint.y * scaleRatio,
             0
           )
           .lifeSpan(200)
@@ -247,7 +247,6 @@ MoveObject player\obj, PxPerSec(speed) * moveDirection * 100.0 / aWeapon( player
 
   /**
    * Raycast to find the closest hit object
-   * TODO: Use a better value for the return object
    */
   _getClosestObjectFrom: function (startPos, rotation) {
     var sightDistance = 500;  // Kuinka kaukaa etsitään seinää pisimmillään
@@ -287,7 +286,13 @@ MoveObject player\obj, PxPerSec(speed) * moveDirection * 100.0 / aWeapon( player
         return accClosestHit;
       });
 
-      return closestHit;
+      return {
+        minDist: Math.sqrt(minDistSquare),
+        hitPoint: closestHit.point,
+        hitNormal: closestHit.normal,
+        fixture: closestHit.fixture,
+        entity: closestHit.fixture.m_body._entity
+      };
     }
   }
 });
