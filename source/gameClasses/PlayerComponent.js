@@ -26,31 +26,6 @@ var PlayerComponent = IgeClass.extend({
 
     this._shootedWithLeftHand = false;
 
-    // Setup physics for the player
-    if (ige.isServer) {
-      this._entity.box2dBody({
-        type: 'dynamic',
-        // Velocity is always set manually and unset when needed, so
-        // we don't want the physics engine to slow the player down
-        // unnecessarily. This way we will get similar velocity no
-        // matter what FPS the game is currently running on.
-        linearDamping: 0.0,
-        angularDamping: 0.0,
-        allowSleep: true,
-        bullet: false,
-        gravitic: false,
-        fixedRotation: true,
-        fixtures: [{
-          density: 1.0,
-          friction: 0.5,
-          restitution: 0,
-          shape: {
-            type: 'circle'
-          }
-        }]
-      });
-    }
-
     // Setup the control system
     if (ige.isClient) {
       ige.input.mapAction('left', ige.input.key.a);

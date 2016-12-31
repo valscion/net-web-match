@@ -12,6 +12,31 @@ var Character = IgeEntityBox2d.extend({
 
     // Start with pistol
     this.changeWeapon('pistol');
+
+    // Setup physics, but only for the server
+    if (ige.isServer) {
+      this.box2dBody({
+        type: 'dynamic',
+        // Velocity is always set manually and unset when needed, so
+        // we don't want the physics engine to slow the player down
+        // unnecessarily. This way we will get similar velocity no
+        // matter what FPS the game is currently running on.
+        linearDamping: 0.0,
+        angularDamping: 0.0,
+        allowSleep: true,
+        bullet: false,
+        gravitic: false,
+        fixedRotation: true,
+        fixtures: [{
+          density: 1.0,
+          friction: 0.5,
+          restitution: 0,
+          shape: {
+            type: 'circle'
+          }
+        }]
+      });
+    }
   },
 
   /**
