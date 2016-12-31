@@ -9,6 +9,12 @@ var GameScene = IgeScene2d.extend({
 
     // Store loaded maps here
     this._maps = {};
+
+    // Store the current map name here
+    this._currentMap = null;
+
+    // Next unoccupied tile position in the shuffled array
+    this._nextUnoccupiedTileIndex = 0;
   },
 
   /**
@@ -17,7 +23,10 @@ var GameScene = IgeScene2d.extend({
   addMap: function (mapName, layerArray, layersById) {
     this._maps[mapName] = {
       layerArray: layerArray,
-      layersById: layersById
+      layersById: layersById,
+      collisionLayer: layersById.WallLayer,
+      width: layersById.WallLayer.map.mapData()[0].length,
+      height: layersById.WallLayer.map.mapData().length
     };
 
     if (ige.isServer) {
@@ -41,13 +50,17 @@ var GameScene = IgeScene2d.extend({
           .mount(this.$('backgroundScene'));
       }
     }
+
+    if (!this._currentMap) {
+      this._currentMap = mapName;
+    }
   },
 
   /**
    * Adds a new character to the scene
    */
   addPlayerToScene: function (clientId) {
-    var freePos = this._unoccupiedTilePosition();
+    var freePos = this._nextUnoccupiedPosition();
 
     var player = new Character()
       .id(clientId)
@@ -59,10 +72,83 @@ var GameScene = IgeScene2d.extend({
   },
 
   /**
-   * Finds a free tile from the map
+   * Finds the next free position from the game
    */
-  _unoccupiedTilePosition: function () {
-    return new IgePoint2d(120, 120);
+  _nextUnoccupiedPosition: function () {
+    var map = this._maps[this._currentMap];
+    var freeTiles = this._freeTilesForMap(map);
+    var tilePosition = freeTiles[this._nextUnoccupiedTileIndex];
+
+    this._nextUnoccupiedTileIndex++;
+    if (this._nextUnoccupiedTileIndex > freeTiles.length) {
+      this._nextUnoccupiedPosition = 0;
+    }
+
+    return tilePosition.multiply(
+      map.collisionLayer.tileWidth(),
+      map.collisionLayer.tileHeight()
+    );
+  },
+
+  /**
+   * Gets the free tiles for a map, using lazy processing
+   */
+  _freeTilesForMap: function (map) {
+    if (map.freeTiles) {
+      // We've already calculated these once, so just return the memoized value
+      return map.freeTiles;
+    }
+
+    map.freeTiles = this._shuffle(this._calculateFreeTiles(map));
+
+    return map.freeTiles;
+  },
+
+  /**
+   * Calculates an array of tiles that are unoccupied for the collision layer
+   */
+  _calculateFreeTiles: function (map) {
+    var collisionMap = map.collisionLayer.map;
+    var freeTiles = [];
+    var maxX = map.width;
+    var maxY = map.height;
+    var x, y;
+
+    for (x = 0; x < maxX; x++) {
+      for (y = 0; y < maxY; y++) {
+        if (!collisionMap.collision(x, y)) {
+          freeTiles.push(new IgePoint2d(x, y));
+        }
+      }
+    }
+
+    return freeTiles;
+  },
+
+  /**
+   * A helper to shuffle an array, using Fisher-Yates Shuffle
+   *
+   * http://stackoverflow.com/a/6274398/1152564
+   */
+  _shuffle: function (array) {
+    var index, temp;
+    var counter = array.length;
+
+    // While there are elements in the array
+    while (counter > 0) {
+      // Pick a random index
+      index = Math.floor(Math.random() * counter);
+
+      // Decrease counter by 1
+      counter--;
+
+      // And swap the last element with it
+      temp = array[counter];
+      array[counter] = array[index];
+      array[index] = temp;
+    }
+
+    return array;
   }
 });
 
