@@ -12,13 +12,22 @@ var GameScene = IgeScene2d.extend({
    * Adds a new character to the scene
    */
   addPlayerToScene: function (clientId) {
+    var freePos = this._unoccupiedTilePosition();
+
     var player = new Character()
       .id(clientId)
       .addComponent(PlayerControlledComponent)
-      .translateTo(120, 120, 0)
+      .translateTo(freePos.x, freePos.y, 0)
       .mount(this);
 
     return player;
+  },
+
+  /**
+   * Finds a free tile from the map
+   */
+  _unoccupiedTilePosition: function () {
+    return new IgePoint2d(120, 120);
   }
 });
 
