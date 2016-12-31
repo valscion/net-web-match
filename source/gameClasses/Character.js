@@ -13,6 +13,9 @@ var Character = IgeEntityBox2d.extend({
     // Setup the entity
     this.addComponent(IgeVelocityComponent);
 
+    // Set the category
+    this.category('Character');
+
     // Setup size
     this.width(38).height(70);
 

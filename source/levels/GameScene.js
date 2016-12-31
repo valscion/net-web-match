@@ -82,6 +82,7 @@ var GameScene = IgeScene2d.extend({
       posY = (tileHeight * (rect.height / 2));
 
       new IgeEntityBox2d()
+        .category('Map')
         .translateTo(rect.x * tileWidth + posX, rect.y * tileHeight + posY, 0)
         .width(rect.width * tileWidth)
         .height(rect.height * tileHeight)

@@ -7,6 +7,9 @@ var BulletPistol = IgeEntityBox2d.extend({
     // Setup size
     this.width(4).height(4);
 
+    // Setup the category
+    this.category('Bullet');
+
     if (ige.isServer) {
       this._setupPhysics();
     }
