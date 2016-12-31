@@ -52,6 +52,9 @@ var ClassicBotComponent = IgeClass.extend({
                               // Pienempi arvo on jyrkempi käännös.
 
     var bot = this.botControl;
+    var currentPos = this.worldPosition();
+    var currentRot = this.rotate().z() - Math.radians(90);
+    var scaleRatio = ige.box2d.scaleRatio();
 
     // Mikäli botti ei ole liian lähellä seinää ja on aika arpoa sille uusi suunta
     // niin tehdään se nyt.
@@ -69,9 +72,26 @@ var ClassicBotComponent = IgeClass.extend({
 
     // Käännetään bottia
     this.rotateBy(0, 0, (bot._rotation / 1000.0) * delta);
+
+    // Seuraavaksi alkaa varsinainen tekoäly jossa tutkitaan ympäristöä.
+    // Tämä tehdää kuitenkin vain mikäli botti ei ole liian lähellä jotakin estettä.
+    if (!bot._tooClose) {
+      const closestHit = bot._getClosestObjectFrom(currentPos, currentRot);
+
+      if (closestHit) {
+        new Circle()
+          .translateTo(
+            closestHit.point.x * scaleRatio,
+            closestHit.point.y * scaleRatio,
+            0
+          )
+          .lifeSpan(200)
+          .streamMode(1)
+          .mount(ige.$('gameScene'));
+      }
+    }
 /*
-// Seuraavaksi alkaa varsinainen tekoäly jossa tutkitaan ympäristöä.
-// Tämä tehdää kuitenkin vain mikäli botti ei ole liian lähellä jotakin estettä.
+
 If player\tooClose = False Then
 
     // Nyt lasketaan etäisyys edessä olevaan esteeseen.
@@ -223,6 +243,52 @@ speed# = MAX_SPEED
 If player\tooClose = True Then speed = MIN_SPEED
 MoveObject player\obj, PxPerSec(speed) * moveDirection * 100.0 / aWeapon( player\weapon, WPNF_WEIGHT ), PxPerSec(SIDESTEP_SPEED * 0.8) * player\sideStep * 100.0 / aWeapon( player\weapon, WPNF_WEIGHT )
 */
+  },
+
+  /**
+   * Raycast to find the closest hit object
+   * TODO: Use a better value for the return object
+   */
+  _getClosestObjectFrom: function (startPos, rotation) {
+    var sightDistance = 500;  // Kuinka kaukaa etsitään seinää pisimmillään
+    const bot = this.botControl;
+
+    const hits = [];
+    const scaleRatio = ige.box2d.scaleRatio();
+    const startPoint = new ige.box2d.b2Vec2(
+      startPos.x / scaleRatio,
+      startPos.y / scaleRatio
+    );
+    const endPoint = new ige.box2d.b2Vec2(
+      startPoint.x + (sightDistance / scaleRatio) * Math.cos(rotation),
+      startPoint.y + (sightDistance / scaleRatio) * Math.sin(rotation)
+    );
+
+    ige.box2d._world.RayCast((fixture, point, normal, fraction) => {
+      const category = fixture.m_body._entity.category();
+      if (category === 'Bullet') return -1;
+      if (category === 'Debug') return -1;
+
+      hits.push({ fixture, category, point, normal, fraction });
+      return 1;
+    }, startPoint, endPoint);
+
+    if (hits.length) {
+      let minDistSquare = 999999;
+      const closestHit = hits.reduce((accClosestHit, hit) => {
+        const distSquare = (
+          Math.pow(startPoint.x - hit.point.x, 2) +
+          Math.pow(startPoint.y - hit.point.y, 2)
+        );
+        if (distSquare < minDistSquare) {
+          minDistSquare = distSquare;
+          return hit;
+        }
+        return accClosestHit;
+      });
+
+      return closestHit;
+    }
   }
 });
 
