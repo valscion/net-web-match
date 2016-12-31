@@ -9,6 +9,9 @@ var Server = IgeClass.extend({
     // Define an object to hold references to our player entities
     this.players = {};
 
+    // Define a list to hold references to the bot entities
+    this.bots = [];
+
     // Add the server-side game methods / event handlers
     this.implement(ServerNetworkEvents);
 

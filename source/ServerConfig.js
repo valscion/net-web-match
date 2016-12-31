@@ -7,6 +7,7 @@ var igeConfig = {
     {name: 'BulletPistol', path: './gameClasses/BulletPistol'},
     {name: 'Character', path: './gameClasses/Character'},
     {name: 'PlayerComponent', path: './gameClasses/PlayerComponent'},
+    {name: 'ClassicBotComponent', path: './gameClasses/ClassicBotComponent'},
 
     {name: 'TiledTestMap', path: './maps/TiledTestMap/TiledTestMap'}
   ]

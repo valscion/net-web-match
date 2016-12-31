@@ -8,6 +8,15 @@ var ServerNetworkEvents = {
    * @private
    */
   _onPlayerConnect: function (socket) {
+    // If we don't yet have bots, add some.
+    if (ige.server.bots.length === 0) {
+      ige.server.bots = ['Bot_1', 'Bot_2', 'Bot_3'].map((botName) =>
+        ige.$('gameScene')
+          .addBotToScene(botName)
+          .streamMode(1)
+      );
+    }
+
     // Don't reject the client connection
     return false;
   },
@@ -26,7 +35,6 @@ var ServerNetworkEvents = {
   _onPlayerEntity: function (data, clientId) {
     if (!ige.server.players[clientId]) {
       ige.server.players[clientId] = ige.$('gameScene').addPlayerToScene(clientId);
-
       ige.server.players[clientId].streamMode(1);
 
       // Tell the client to track their player entity

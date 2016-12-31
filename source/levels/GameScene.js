@@ -57,7 +57,7 @@ var GameScene = IgeScene2d.extend({
   },
 
   /**
-   * Adds a new character to the scene
+   * Adds a new player character to the scene
    */
   addPlayerToScene: function (clientId) {
     var freePos = this._nextUnoccupiedPosition();
@@ -69,6 +69,21 @@ var GameScene = IgeScene2d.extend({
       .mount(this);
 
     return player;
+  },
+
+  /**
+   * Adds a new bot character to the scene
+   */
+  addBotToScene: function (botName) {
+    var freePos = this._nextUnoccupiedPosition();
+
+    var bot = new Character()
+      .id(botName)
+      .addComponent(ClassicBotComponent)
+      .translateTo(freePos.x, freePos.y, 0)
+      .mount(this);
+
+    return bot;
   },
 
   /**
