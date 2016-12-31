@@ -30,6 +30,12 @@ var ServerNetworkEvents = {
       // so that we don't leak memory
       delete ige.server.players[clientId];
     }
+
+    // If this was the last player, remove all the bots, too
+    if (Object.keys(ige.server.players).length === 0) {
+      ige.server.bots.forEach(bot => bot.destroy());
+      ige.server.bots = [];
+    }
   },
 
   _onPlayerEntity: function (data, clientId) {
