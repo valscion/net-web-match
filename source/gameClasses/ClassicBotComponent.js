@@ -47,7 +47,7 @@ var ClassicBotComponent = IgeClass.extend({
     var wakeupDist = 100;     // Jos matkaa esteeseen on vähemmän kuin tämä niin aletaan etsiä uutta suuntaa
     var exploreAngle = 50;    // Kun pitää päätellä uusi suunta niin se tehdään katselemalla
                               // näin monta astetta molempiin suuntiin
-    var dodgeRotation = 0.2;  // Kun botti on lähellä estettä niin tällä määrätään kuinka
+    var dodgeRotation = 1.5;  // Kun botti on lähellä estettä niin tällä määrätään kuinka
                               // jyrkällä käännöksellä yritetään väistää.
                               // Pienempi arvo on jyrkempi käännös.
 
@@ -76,103 +76,64 @@ var ClassicBotComponent = IgeClass.extend({
     // Seuraavaksi alkaa varsinainen tekoäly jossa tutkitaan ympäristöä.
     // Tämä tehdää kuitenkin vain mikäli botti ei ole liian lähellä jotakin estettä.
     if (!bot._tooClose) {
-      const closestHit = bot._getClosestObjectFrom(currentPos, currentRot);
+      // Nyt lasketaan etäisyys edessä olevaan esteeseen.
+      // Etäisyys lasketaan objektin keskeltä sekä reunoista eli objektin koko leveydeltä.
+      const closestAhead = bot._getClosestObjectFrom(currentPos, currentRot);
+      const closestFromLeft = bot._getClosestObjectFrom(currentPos.addPoint({ x: 0, y: -15 }));
+      const closestFromRight = bot._getClosestObjectFrom(currentPos.addPoint({ x: 0, y: 15 }));
 
-      if (closestHit) {
-        new Circle()
-          .translateTo(
-            closestHit.hitPoint.x * scaleRatio,
-            closestHit.hitPoint.y * scaleRatio,
-            0
-          )
-          .lifeSpan(200)
-          .streamMode(1)
-          .mount(ige.$('gameScene'));
-      }
-    }
-/*
+      const minDist = Math.min(
+        closestAhead !== undefined ? closestAhead.distance : Infinity,
+        closestFromLeft !== undefined ? closestFromLeft.distance : Infinity,
+        closestFromRight !== undefined ? closestFromRight.distance : Infinity
+      );
 
-If player\tooClose = False Then
-
-    // Nyt lasketaan etäisyys edessä olevaan esteeseen.
-    // Etäisyys lasketaan objektin keskeltä sekä reunoista eli objektin koko leveydeltä.
-
-    minDist# = 0
-    dist# = 0
-
-    // Ensin "silmä" keskelle objektia
-    CloneObjectPosition gPicker, player\obj
-    CloneObjectOrientation gPicker, player\obj
-
-    // Poimitaan lähin este
-    ObjectPick gPicker
-    minDist = Distance(ObjectX(gPicker), ObjectY(gPicker), PickedX(), PickedY())
-
-    // Siiretään "silmä" toiseen reunaan ja poimitaan lähin este
-    MoveObject gPicker, 0, -15
-    ObjectPick gPicker
-    minDist = Min(minDist, Distance(ObjectX(gPicker), ObjectY(gPicker), PickedX(), PickedY()))
-
-    // Ja vielä toiseen reunaan ja poimitaan lähin este
-    MoveObject gPicker, 0, 30
-    ObjectPick gPicker
-    minDist = Min(minDist, Distance(ObjectX(gPicker), ObjectY(gPicker), PickedX(), PickedY()))
-
-    // Jos este on niin lähellä että siihen pitää reagoida niin tutkitaan se nyt.
-    If minDist < WAKEUP_DIST Then
-        // Ensin "silmä" samaan suuntaan kuin zombie
-        CloneObjectOrientation gPicker, player\obj
-        // Käännetään katsetta toiselle sivulle ja lasketaan etäisyys lähimpään esteeseen
-        TurnObject gPicker, -EXPLORE_ANGLE
-        ObjectPick gPicker
-        d1# = Distance(ObjectX(gPicker), ObjectY(gPicker), PickedX(), PickedY())
-
-        // Ja sitten vielä toiseen suuntaan.
-        TurnObject gPicker, EXPLORE_ANGLE * 2
-        ObjectPick gPicker
-        d2# = Distance(ObjectX(gPicker), ObjectY(gPicker), PickedX(), PickedY())
+      // Jos este on niin lähellä että siihen pitää reagoida niin tutkitaan se nyt.
+      if (minDist < wakeupDist) {
+        const checkLeft = bot._getClosestObjectFrom(currentPos, currentRot - Math.radians(exploreAngle));
+        const checkRight = bot._getClosestObjectFrom(currentPos, currentRot + Math.radians(exploreAngle));
 
         // Tutkitaan kumpaan suuntaan on pidempi matka seuraavaan esteeseen
         // ja suunnataan sinne.
         // Kääntymisen jyrkkyyteen vaikuttaa vielä etäisyys esteeseen eli
         // mitä lähempänä ollaan niin sitä jyrkemmin käännytään
-        d# = 0
-        If d1 > d2 Then
-            d = -(WAKEUP_DIST - minDist)
-        Else
-            d = (WAKEUP_DIST - minDist)
-        EndIf
+        let d = 0;
+        if (checkLeft.distance > checkRight.distance) {
+            d = -(wakeupDist - minDist);
+        } else {
+            d = (wakeupDist - minDist);
+        }
+
         // Asetetaan kääntymisnopeus
-        player\rotation = d / DODGE_ROTATION
+        bot._rotation = Math.radians(d / dodgeRotation);
         // Asetetaan tavoitekulma
-        player\nextAngle = WrapAngle(ObjectAngle(player\obj) + d)
+        bot._nextAngle = Math.degrees(currentRot) + d;
+        // if (bot._nextAngle < 0) bot._nextAngle += 360;
+        // if (bot._nextAngle > 360) bot._nextAngle -= 360;
         // Asetetaan vielä tooClose-muuttuja päälle eli tekoälyä ei päivitetä
         // ennen kuin objekti on kääntynyt tavoitekulmaan.
         // Samalla myös objektin nopeutta vähennetään.
-        player\tooClose = True
+        bot._tooClose = true
 
-        player\lastAngle = ObjectAngle(player\obj) - player\nextAngle
-        If player\lastAngle > 180 Then player\lastAngle = player\lastAngle - 360
-        If player\lastAngle < -180 Then player\lastAngle = player\lastAngle + 360
-    EndIf
-Else
-    // Botti on liian lähellä jotain estettä.
-    // tooClose-muuttuja nollataan vain jos tekoälyn asettama tavoitekulma on saavutettu.
-    //na# = Abs(ObjectAngle(player\obj) - player\nextAngle)
-    //If na > 180 Then na = 360 - na
-    //If na < 10 Then
-    a# = ObjectAngle(player\obj) - player\nextAngle
-    If a > 180 Then a = a - 360
-    If a < -180 Then a = a + 360
-    If (a < 0 And player\lastAngle >= 0) Or (a > 0 And player\lastAngle <= 0) Then
+        bot._lastAngle = Math.degrees(currentRot) - bot._nextAngle;
+        if (bot._lastAngle > 180) bot._lastAngle -= 360;
+        if (bot._lastAngle < -180) bot._lastAngle += 360;
+      }
+    } else {
+      // Botti on liian lähellä jotain estettä.
+      // tooClose-muuttuja nollataan vain jos tekoälyn asettama tavoitekulma on saavutettu.
+      let a = Math.degrees(currentRot) - bot._nextAngle;
+      if (a > 180) a -= 360;
+      if (a < -180) a += 360;
+      if ((a < 0 && bot._lastAngle >= 0) || (a > 0 && bot._lastAngle <= 0)) {
         // Objektin kulma on nyt riittävän lähellä tavoitekulmaa joten
         // kääntäminen voidaan lopettaa.
-        player\rotation = 0
-        player\tooClose = False
-    EndIf
-    player\lastAngle = a
-EndIf
-
+        bot._rotation = 0;
+        bot._tooClose = false;
+      }
+      bot._lastAngle = 0;
+    }
+/*
 // Taisteluäly
 moveDirection = 1
 pickedPlayer = 0
@@ -236,20 +197,30 @@ Else
         If player\lastAngle < -180 Then player\lastAngle = player\lastAngle + 360
     EndIf
 EndIf
-
-// Nyt siirretään objektia.
-speed# = MAX_SPEED
-// Jos ollaan liian lähellä jotain estettä niin pienemmällä vauhdilla
-If player\tooClose = True Then speed = MIN_SPEED
-MoveObject player\obj, PxPerSec(speed) * moveDirection * 100.0 / aWeapon( player\weapon, WPNF_WEIGHT ), PxPerSec(SIDESTEP_SPEED * 0.8) * player\sideStep * 100.0 / aWeapon( player\weapon, WPNF_WEIGHT )
 */
+
+    {
+      // Nyt siirretään objektia.
+      let speed = maxSpeed;
+      // Jos ollaan liian lähellä jotain estettä niin pienemmällä vauhdilla
+      if (bot._tooClose) speed = minSpeed;
+
+      this.translateCharacter(
+        // TODO: Use the weight of weapon instead of 100, the current denominator
+        // TODO: Sidestep? How?!
+        (((speed / 1000.0) * delta)/* * moveDirection */ * 100.0 / 100) * Math.cos(currentRot),
+        (((speed / 1000.0) * delta)/* * moveDirection */ * 100.0 / 100) * Math.sin(currentRot)
+      )
+
+      // MoveObject player\obj, PxPerSec(speed) * moveDirection * 100.0 / aWeapon( player\weapon, WPNF_WEIGHT ), PxPerSec(SIDESTEP_SPEED * 0.8) * player\sideStep * 100.0 / aWeapon( player\weapon, WPNF_WEIGHT )
+    }
   },
 
   /**
    * Raycast to find the closest hit object
    */
   _getClosestObjectFrom: function (startPos, rotation) {
-    var sightDistance = 500;  // Kuinka kaukaa etsitään seinää pisimmillään
+    var sightDistance = 1500;  // Kuinka kaukaa etsitään seinää pisimmillään
     const bot = this.botControl;
 
     const hits = [];
@@ -287,7 +258,7 @@ MoveObject player\obj, PxPerSec(speed) * moveDirection * 100.0 / aWeapon( player
       });
 
       return {
-        minDist: Math.sqrt(minDistSquare),
+        distance: Math.sqrt(minDistSquare),
         hitPoint: closestHit.point,
         hitNormal: closestHit.normal,
         fixture: closestHit.fixture,
