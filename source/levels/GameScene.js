@@ -21,7 +21,7 @@ var GameScene = IgeScene2d.extend({
    * Adds a map to the scene and changes to it
    */
   addMap: function (mapName, layerArray, layersById) {
-    this._maps[mapName] = {
+    var map = {
       layerArray: layerArray,
       layersById: layersById,
       collisionLayer: layersById.WallLayer,
@@ -31,7 +31,7 @@ var GameScene = IgeScene2d.extend({
 
     if (ige.isServer) {
       // Create static box2d objects from the collision layer
-      ige.box2d.staticsFromMap(layersById.WallLayer);
+      this._setupBox2dForMap(map);
     }
 
     if (ige.isClient) {
@@ -51,8 +51,51 @@ var GameScene = IgeScene2d.extend({
       }
     }
 
+    this._maps[mapName] = map;
     if (!this._currentMap) {
       this._currentMap = mapName;
+    }
+  },
+
+  /**
+   * Adds collision layer as box2d objects to the game
+   */
+  _setupBox2dForMap: function (map) {
+    var collisionLayer = map.collisionLayer;
+    var tileWidth = collisionLayer.tileWidth();
+    var tileHeight = collisionLayer.tileHeight();
+    var posX;
+    var posY;
+    var rectArray;
+    var rectCount;
+    var rect;
+
+    // Get the array of rectangle bounds based on
+    // the map's data
+    rectArray = collisionLayer.scanRects();
+    rectCount = rectArray.length;
+
+    while (rectCount--) {
+      rect = rectArray[rectCount];
+
+      posX = (tileWidth * (rect.width / 2));
+      posY = (tileHeight * (rect.height / 2));
+
+      new IgeEntityBox2d()
+        .translateTo(rect.x * tileWidth + posX, rect.y * tileHeight + posY, 0)
+        .width(rect.width * tileWidth)
+        .height(rect.height * tileHeight)
+        .drawBounds(true)
+        .drawBoundsData(false)
+        .box2dBody({
+          type: 'static',
+          allowSleep: true,
+          fixtures: [{
+            shape: {
+              type: 'rectangle'
+            }
+          }]
+        });
     }
   },
 
