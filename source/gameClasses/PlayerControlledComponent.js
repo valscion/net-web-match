@@ -59,7 +59,7 @@ var PlayerControlledComponent = IgeClass.extend({
       ige.input.mapAction('down', ige.input.key.s);
       ige.input.mapAction('shoot', ige.input.key.space);
 
-      ige.client.gameScene.mouseMove(this._onMouseMove);
+      ige.$('gameScene').mouseMove(this._onMouseMove);
     }
 
     // Add the playerControlledComponent behaviours to the entity

@@ -3,6 +3,7 @@ var igeClientConfig = {
     /* Some external libraries if you want */
 
     /* Your custom game JS scripts */
+    './levels/WorldScene.js',
     './levels/GameScene.js',
     './maps/TiledTestMap/TiledTestMap.js',
 

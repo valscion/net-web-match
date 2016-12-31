@@ -57,7 +57,7 @@ var Server = IgeClass.extend({
             ige.network.acceptConnections(true);
 
             // Create the scene
-            ige.addGraph('GameScene');
+            ige.addGraph('WorldScene');
           }
         });
       });

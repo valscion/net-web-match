@@ -45,7 +45,7 @@ var Client = IgeClass.extend({
                 // console.log('Stream entity created with ID: ' + entity.id());
               });
 
-            ige.addGraph('GameScene');
+            ige.addGraph('WorldScene');
 
             // Ask the server to create an entity for us
             ige.network.send('playerEntity');

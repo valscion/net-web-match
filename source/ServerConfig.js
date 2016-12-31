@@ -1,5 +1,6 @@
 var igeConfig = {
   include: [
+    {name: 'WorldScene', path: './levels/WorldScene'},
     {name: 'GameScene', path: './levels/GameScene'},
     {name: 'ServerNetworkEvents', path: './gameClasses/ServerNetworkEvents'},
     {name: 'Weapon', path: './gameClasses/Weapon'},
