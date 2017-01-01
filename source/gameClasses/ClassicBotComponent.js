@@ -220,7 +220,7 @@ EndIf
    * Raycast to find the closest hit object
    */
   _getClosestObjectFrom: function (startPos, rotation) {
-    var sightDistance = 150000;  // Kuinka kaukaa etsitään seinää pisimmillään
+    var sightDistance = 1500;  // Kuinka kaukaa etsitään seinää pisimmillään
     const bot = this.botControl;
 
     const hits = [];
