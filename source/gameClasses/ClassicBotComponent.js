@@ -82,8 +82,8 @@ var ClassicBotComponent = IgeClass.extend({
       // Nyt lasketaan etäisyys edessä olevaan esteeseen.
       // Etäisyys lasketaan objektin keskeltä sekä reunoista eli objektin koko leveydeltä.
       const closestAhead = bot._getClosestObjectFrom(currentPos, currentRot);
-      const closestFromLeft = bot._getClosestObjectFrom(currentPos.addPoint({ x: 0, y: -15 }));
-      const closestFromRight = bot._getClosestObjectFrom(currentPos.addPoint({ x: 0, y: 15 }));
+      const closestFromLeft = bot._getClosestObjectFrom(currentPos.addPoint({ x: 0, y: -15 }), currentRot);
+      const closestFromRight = bot._getClosestObjectFrom(currentPos.addPoint({ x: 0, y: 15 }), currentRot);
 
       const minDist = Math.min(
         closestAhead !== undefined ? closestAhead.distance : Infinity,
