@@ -91,10 +91,17 @@ var ClassicBotComponent = IgeClass.extend({
         closestFromRight !== undefined ? closestFromRight.distance : Infinity
       );
 
+      this.debugRayCastResult(closestAhead);
+      this.debugRayCastResult(closestFromLeft);
+      this.debugRayCastResult(closestFromRight);
+
       // Jos este on niin lähellä että siihen pitää reagoida niin tutkitaan se nyt.
       if (minDist < wakeupDist) {
         const checkLeft = bot._getClosestObjectFrom(currentPos, currentRot - Math.radians(exploreAngle));
         const checkRight = bot._getClosestObjectFrom(currentPos, currentRot + Math.radians(exploreAngle));
+
+        this.debugRayCastResult(checkLeft);
+        this.debugRayCastResult(checkRight);
 
         // Tutkitaan kumpaan suuntaan on pidempi matka seuraavaan esteeseen
         // ja suunnataan sinne.
