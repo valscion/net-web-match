@@ -55,7 +55,6 @@ var ClassicBotComponent = IgeClass.extend({
                               // Pienempi arvo on jyrkempi käännös.
 
     var bot = this.botControl;
-    var currentPos = this.worldPosition();
     var currentRot = this.rotate().z() - Math.radians(90);
     var scaleRatio = ige.box2d.scaleRatio();
 
@@ -79,11 +78,16 @@ var ClassicBotComponent = IgeClass.extend({
     // Seuraavaksi alkaa varsinainen tekoäly jossa tutkitaan ympäristöä.
     // Tämä tehdää kuitenkin vain mikäli botti ei ole liian lähellä jotakin estettä.
     if (!bot._tooClose) {
+      // Calculate distances with a few pixels behind the center to get better raycasts
+      const currentPos = this.worldPosition().minusPoint({
+        x: Math.cos(currentRot) * 5,
+        y: Math.sin(currentRot) * 5
+      });
       // Nyt lasketaan etäisyys edessä olevaan esteeseen.
       // Etäisyys lasketaan objektin keskeltä sekä reunoista eli objektin koko leveydeltä.
       const closestAhead = bot._getClosestObjectFrom(currentPos, currentRot);
-      const closestFromLeft = bot._getClosestObjectFrom(currentPos.addPoint({ x: 0, y: -15 }), currentRot);
-      const closestFromRight = bot._getClosestObjectFrom(currentPos.addPoint({ x: 0, y: 15 }), currentRot);
+      const closestFromLeft = bot._getClosestObjectFrom(currentPos.addPoint({ x: -5, y: -15 }), currentRot);
+      const closestFromRight = bot._getClosestObjectFrom(currentPos.addPoint({ x: -5, y: 15 }), currentRot);
 
       const minDist = Math.min(
         closestAhead !== undefined ? closestAhead.distance : Infinity,
@@ -118,24 +122,19 @@ var ClassicBotComponent = IgeClass.extend({
         bot._rotation = Math.radians(d / dodgeRotation);
         // Asetetaan tavoitekulma
         bot._nextAngle = Math.degrees(currentRot) + d;
-        if (bot._nextAngle < 0) bot._nextAngle += 360;
-        if (bot._nextAngle > 360) bot._nextAngle -= 360;
         // Asetetaan vielä tooClose-muuttuja päälle eli tekoälyä ei päivitetä
         // ennen kuin objekti on kääntynyt tavoitekulmaan.
         // Samalla myös objektin nopeutta vähennetään.
         bot._tooClose = true
 
         bot._lastAngle = Math.degrees(currentRot) - bot._nextAngle;
-        if (bot._lastAngle > 180) bot._lastAngle -= 360;
-        if (bot._lastAngle < -180) bot._lastAngle += 360;
       }
     } else {
       // Botti on liian lähellä jotain estettä.
       // tooClose-muuttuja nollataan vain jos tekoälyn asettama tavoitekulma on saavutettu.
-      let a = Math.degrees(currentRot) - bot._nextAngle;
-      if (a > 180) a -= 360;
-      if (a < -180) a += 360;
-      if ((a < 0 && bot._lastAngle >= 0) || (a > 0 && bot._lastAngle <= 0)) {
+      let diffToTarget = Math.degrees(currentRot) - bot._nextAngle;
+
+      if (Math.abs(diffToTarget) < 5) {
         // Objektin kulma on nyt riittävän lähellä tavoitekulmaa joten
         // kääntäminen voidaan lopettaa.
         bot._rotation = 0;
@@ -248,6 +247,7 @@ EndIf
       const category = fixture.m_body._entity.category();
       if (category === 'Bullet') return -1;
       if (category === 'Debug') return -1;
+      if (category === 'Character') return -1;
 
       closestHit = { fixture, category, point, normal, fraction };
       return fraction;
