@@ -22,6 +22,11 @@ var Character = IgeEntityBox2d.extend({
     // Start with pistol
     this.changeWeapon('pistol');
 
+    // Debug AI sight
+    this._rayCasts = [];
+    this.streamProperty();
+    this.streamSectionsPush('props');
+
     // Setup physics, but only for the server
     if (ige.isServer) {
       this.box2dBody({
@@ -55,6 +60,51 @@ var Character = IgeEntityBox2d.extend({
   tick: function (ctx) {
     // Call the IgeEntity (super-class) tick() method
     IgeEntity.prototype.tick.call(this, ctx);
+
+    if (ige.isClient) {
+      this._transformContext(ctx, true);
+
+      var rayCasts = this.streamProperty('debugRayCasts');
+      if (rayCasts) {
+        ctx.strokeStyle = 'rgba(255, 128, 128, 0.5)';
+
+        rayCasts.forEach(function (rayCast) {
+          var startPoint = new IgePoint2d(rayCast.startX, rayCast.startY);
+          var hitPoint = new IgePoint2d(rayCast.hitX, rayCast.hitY);
+          var endPoint = new IgePoint2d(rayCast.endX, rayCast.endY);
+
+          ctx.lineWidth = 10;
+          ctx.strokeStyle = 'rgba(255, 64, 64, 0.5)';
+          ctx.beginPath();
+          ctx.moveTo(startPoint.x, startPoint.y);
+          ctx.lineTo(hitPoint.x, hitPoint.y);
+          ctx.stroke();
+        });
+      }
+
+      this._transformContext(ctx, true);
+    }
+
+    if (ige.isServer) {
+      this.streamProperty('debugRayCasts', this._rayCasts.slice());
+      this._rayCasts.length = 0;
+    }
+  },
+
+  /**
+   * Adds a ray cast to the debug raycasts array
+   */
+  debugRayCastResult: function (rayCast) {
+    if (!rayCast) return;
+
+    this._rayCasts.push({
+      startX: rayCast.startPoint.x,
+      startY: rayCast.startPoint.y,
+      hitX: rayCast.hitPoint.x,
+      hitY: rayCast.hitPoint.y,
+      endX: rayCast.endPoint.x,
+      endY: rayCast.endPoint.y
+    });
   },
 
   /**
