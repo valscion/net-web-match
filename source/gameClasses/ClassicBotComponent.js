@@ -226,7 +226,7 @@ EndIf
     var sightDistance = 1500;  // Kuinka kaukaa etsitään seinää pisimmillään
     const bot = this.botControl;
 
-    const hits = [];
+    let closestHit = null;
     const scaleRatio = ige.box2d.scaleRatio();
     const startPoint = new ige.box2d.b2Vec2(
       startPos.x / scaleRatio,
@@ -242,27 +242,27 @@ EndIf
       if (category === 'Bullet') return -1;
       if (category === 'Debug') return -1;
 
-      hits.push({ fixture, category, point, normal, fraction });
-      return 1;
+      closestHit = { fixture, category, point, normal, fraction };
+      return fraction;
     }, startPoint, endPoint);
 
-    if (hits.length) {
-      let minDistSquare = 999999;
-      const closestHit = hits.reduce((accClosestHit, hit) => {
-        const distSquare = (
-          Math.pow(startPoint.x - hit.point.x, 2) +
-          Math.pow(startPoint.y - hit.point.y, 2)
-        );
-        if (distSquare < minDistSquare) {
-          minDistSquare = distSquare;
-          return hit;
-        }
-        return accClosestHit;
-      });
+    if (closestHit) {
+      const minDistSquare = (
+        Math.pow(startPoint.x - closestHit.point.x, 2) +
+        Math.pow(startPoint.y - closestHit.point.y, 2)
+      );
 
       return {
         distance: Math.sqrt(minDistSquare) * scaleRatio,
-        hitPoint: closestHit.point,
+        startPoint: startPos,
+        hitPoint: new IgePoint2d(
+          closestHit.point.x * scaleRatio,
+          closestHit.point.y * scaleRatio
+        ),
+        endPoint: new IgePoint2d(
+          endPoint.x * scaleRatio,
+          endPoint.y * scaleRatio
+        ),
         hitNormal: closestHit.normal,
         fixture: closestHit.fixture,
         entity: closestHit.fixture.m_body._entity
