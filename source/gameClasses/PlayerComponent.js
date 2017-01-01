@@ -101,7 +101,7 @@ var PlayerComponent = IgeClass.extend({
         var x = pos.x + Math.cos(rot) * 33 + Math.cos(rot - Math.radians(90)) * 10 * handFactor;
         var y = pos.y + Math.sin(rot) * 33 + Math.sin(rot - Math.radians(90)) * 10 * handFactor;
 
-        new BulletPistol()
+        new Bullet(char.weapon())
           .translateTo(x, y, 0)
           .rotateTo(0, 0, rot)
           .streamMode(1)

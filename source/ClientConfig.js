@@ -7,7 +7,7 @@ var igeClientConfig = {
     './levels/GameScene.js',
     './maps/TiledTestMap/TiledTestMap.js',
 
-    './gameClasses/BulletPistol.js',
+    './gameClasses/Bullet.js',
     './gameClasses/Circle.js',
     './gameClasses/Weapon.js',
     './gameClasses/ClientNetworkEvents.js',

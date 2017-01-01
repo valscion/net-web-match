@@ -1,8 +1,11 @@
-var BulletPistol = IgeEntityBox2d.extend({
-  classId: 'BulletPistol',
+var Bullet = IgeEntityBox2d.extend({
+  classId: 'Bullet',
 
-  init: function (options) {
+  init: function (weaponType) {
     IgeEntityBox2d.prototype.init.call(this);
+
+    // Store the weapon type
+    this._type = weaponType;
 
     // Setup size
     this.width(4).height(4);
@@ -16,8 +19,13 @@ var BulletPistol = IgeEntityBox2d.extend({
 
     // Add the bullet texture
     if (ige.isClient) {
-      this.texture(ige.weapon.getProp('pistol', 'bullet'));
+      this.texture(ige.weapon.getProp(this._type, 'bullet'));
     }
+  },
+
+  // Stream the `init` parameter on creation so that client gets it, too
+  streamCreateData: function () {
+    return this._type;
   },
 
   _setupPhysics: function () {
@@ -42,7 +50,7 @@ var BulletPistol = IgeEntityBox2d.extend({
 
   fireAtWill: function () {
     var physicsUpdateRate = 60.0;
-    var speed = ige.weapon.getProp('pistol', 'bulletspeed') / physicsUpdateRate;
+    var speed = ige.weapon.getProp(this._type, 'bulletspeed') / physicsUpdateRate;
     var rot = this.rotate().z();
     var b2dBody = this._box2dBody;
     var b2dVel = new ige.box2d.b2Vec2(speed * Math.cos(rot), speed * Math.sin(rot));
@@ -52,4 +60,4 @@ var BulletPistol = IgeEntityBox2d.extend({
   }
 });
 
-if (typeof(module) !== 'undefined' && typeof(module.exports) !== 'undefined') { module.exports = BulletPistol; }
+if (typeof(module) !== 'undefined' && typeof(module.exports) !== 'undefined') { module.exports = Bullet; }

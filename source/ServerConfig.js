@@ -5,7 +5,7 @@ var igeConfig = {
     {name: 'ServerNetworkEvents', path: './gameClasses/ServerNetworkEvents'},
     {name: 'Weapon', path: './gameClasses/Weapon'},
     {name: 'Circle', path: './gameClasses/Circle'},
-    {name: 'BulletPistol', path: './gameClasses/BulletPistol'},
+    {name: 'Bullet', path: './gameClasses/Bullet'},
     {name: 'Character', path: './gameClasses/Character'},
     {name: 'PlayerComponent', path: './gameClasses/PlayerComponent'},
     {name: 'ClassicBotComponent', path: './gameClasses/ClassicBotComponent'},
