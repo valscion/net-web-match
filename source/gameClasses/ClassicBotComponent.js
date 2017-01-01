@@ -24,6 +24,9 @@ var ClassicBotComponent = IgeClass.extend({
     this._lastAngle = 0;
     this._spawnTime = ige.currentTime();
 
+    // Random start rotation
+    this._entity.rotateBy(0, 0, Math.radians(this.randFloat(0, 360)));
+
     // Add the behaviour to the entity
     this._entity.addBehaviour('classicBotComponent_behaviour', this._behaviour);
   },
