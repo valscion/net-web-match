@@ -19,6 +19,9 @@ var WorldScene = IgeSceneGraph.extend({
       .drawBounds(false)
       .mount(ige);
 
+    // Scale the camera to debug AI
+    self.vp1.camera.scaleTo(0.25, 0.25, 0);
+
     // Create the background scene for tilemap
     self.backgroundScene = new IgeScene2d()
       .id('backgroundScene')
