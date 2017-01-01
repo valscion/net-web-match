@@ -47,7 +47,7 @@ var ClassicBotComponent = IgeClass.extend({
     var wakeupDist = 100;     // Jos matkaa esteeseen on vähemmän kuin tämä niin aletaan etsiä uutta suuntaa
     var exploreAngle = 50;    // Kun pitää päätellä uusi suunta niin se tehdään katselemalla
                               // näin monta astetta molempiin suuntiin
-    var dodgeRotation = 1.5;  // Kun botti on lähellä estettä niin tällä määrätään kuinka
+    var dodgeRotation = 0.2;  // Kun botti on lähellä estettä niin tällä määrätään kuinka
                               // jyrkällä käännöksellä yritetään väistää.
                               // Pienempi arvo on jyrkempi käännös.
 
@@ -108,8 +108,8 @@ var ClassicBotComponent = IgeClass.extend({
         bot._rotation = Math.radians(d / dodgeRotation);
         // Asetetaan tavoitekulma
         bot._nextAngle = Math.degrees(currentRot) + d;
-        // if (bot._nextAngle < 0) bot._nextAngle += 360;
-        // if (bot._nextAngle > 360) bot._nextAngle -= 360;
+        if (bot._nextAngle < 0) bot._nextAngle += 360;
+        if (bot._nextAngle > 360) bot._nextAngle -= 360;
         // Asetetaan vielä tooClose-muuttuja päälle eli tekoälyä ei päivitetä
         // ennen kuin objekti on kääntynyt tavoitekulmaan.
         // Samalla myös objektin nopeutta vähennetään.
@@ -220,7 +220,7 @@ EndIf
    * Raycast to find the closest hit object
    */
   _getClosestObjectFrom: function (startPos, rotation) {
-    var sightDistance = 1500;  // Kuinka kaukaa etsitään seinää pisimmillään
+    var sightDistance = 150000;  // Kuinka kaukaa etsitään seinää pisimmillään
     const bot = this.botControl;
 
     const hits = [];
@@ -258,7 +258,7 @@ EndIf
       });
 
       return {
-        distance: Math.sqrt(minDistSquare),
+        distance: Math.sqrt(minDistSquare) * scaleRatio,
         hitPoint: closestHit.point,
         hitNormal: closestHit.normal,
         fixture: closestHit.fixture,
