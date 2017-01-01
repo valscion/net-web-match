@@ -98,7 +98,7 @@ var ClassicBotComponent = IgeClass.extend({
         // Kääntymisen jyrkkyyteen vaikuttaa vielä etäisyys esteeseen eli
         // mitä lähempänä ollaan niin sitä jyrkemmin käännytään
         let d = 0;
-        if (checkLeft.distance > checkRight.distance) {
+        if (!checkRight || (checkLeft && checkLeft.distance > checkRight.distance)) {
             d = -(wakeupDist - minDist);
         } else {
             d = (wakeupDist - minDist);
