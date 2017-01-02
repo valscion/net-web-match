@@ -47,7 +47,6 @@ var PlayerComponent = IgeClass.extend({
       ige.input.mapAction('up', ige.input.key.w);
       ige.input.mapAction('down', ige.input.key.s);
       ige.input.mapAction('shoot', ige.input.key.space);
-      ige.input.mapAction('zoomCamera', ige.input.key.z);
 
       ige.$('gameScene').mouseMove(this._onMouseMove);
     }
@@ -136,13 +135,6 @@ var PlayerComponent = IgeClass.extend({
           }
         }
       });
-
-      // Debug AI with a zooming camera
-      if (ige.input.actionState('zoomCamera')) {
-        ige.client.vp1.camera.scaleTo(0.25, 0.25, 0);
-      } else {
-        ige.client.vp1.camera.scaleTo(1, 1, 0);
-      }
     }
   }
 });

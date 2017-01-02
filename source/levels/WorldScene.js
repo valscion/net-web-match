@@ -30,6 +30,11 @@ var WorldScene = IgeSceneGraph.extend({
     self.tiled.loadJson(this._tiledMap('TiledTestMap'), function (layerArray, layersById) {
       ige.gameScene.addMap('TiledTestMap', layerArray, layersById);
     });
+
+    // Add a component useful for zooming the map
+    if (ige.isClient) {
+      self.cameraZoomer = new CameraZoomer();
+    }
   },
 
   /**

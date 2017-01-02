@@ -12,6 +12,7 @@ var igeClientConfig = {
     './gameClasses/ClientNetworkEvents.js',
     './gameClasses/Character.js',
     './gameClasses/PlayerComponent.js',
+    './gameClasses/CameraZoomer.js',
 
     /* Standard game scripts */
     './client.js',
