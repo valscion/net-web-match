@@ -17,7 +17,7 @@ var Client = IgeClass.extend({
     self._addEditor();
 
     var host = location.hostname;
-    var port = Number(location.port) + 1;
+    var port = Number(location.port || 8000) + 1;
     var serverUrl = 'http://' + host + ':' + port;
 
     // Wait for our textures to load before continuing
