@@ -14,7 +14,6 @@ var Client = IgeClass.extend({
     // Load the weapons data
     ige.addComponent(Weapon);
 
-    this.debugCircleTexture = new IgeTexture('./assets/Circle.js');
     self._addEditor();
 
     var host = location.hostname;

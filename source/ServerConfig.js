@@ -4,7 +4,6 @@ var igeConfig = {
     {name: 'GameScene', path: './levels/GameScene'},
     {name: 'ServerNetworkEvents', path: './gameClasses/ServerNetworkEvents'},
     {name: 'Weapon', path: './gameClasses/Weapon'},
-    {name: 'Circle', path: './gameClasses/Circle'},
     {name: 'Bullet', path: './gameClasses/Bullet'},
     {name: 'Character', path: './gameClasses/Character'},
     {name: 'PlayerComponent', path: './gameClasses/PlayerComponent'},
