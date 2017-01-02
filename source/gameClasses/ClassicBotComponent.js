@@ -249,18 +249,21 @@ EndIf
       if (category === 'Debug') return -1;
       if (category === 'Character') return -1;
 
-      closestHit = { fixture, category, point, normal, fraction };
-      return fraction;
+      const distSquare = (
+        Math.pow(startPoint.x - point.x, 2) +
+        Math.pow(startPoint.y - point.y, 2)
+      );
+
+      if (!closestHit || closestHit.distSquare > distSquare) {
+        closestHit = { fixture, category, point, normal, fraction, distSquare };
+      }
+
+      return 1;
     }, startPoint, endPoint);
 
     if (closestHit) {
-      const minDistSquare = (
-        Math.pow(startPoint.x - closestHit.point.x, 2) +
-        Math.pow(startPoint.y - closestHit.point.y, 2)
-      );
-
       return {
-        distance: Math.sqrt(minDistSquare) * scaleRatio,
+        distance: Math.sqrt(closestHit.distSquare) * scaleRatio,
         startPoint: startPos,
         hitPoint: new IgePoint2d(
           closestHit.point.x * scaleRatio,
