@@ -10,7 +10,7 @@ var ServerNetworkEvents = {
   _onPlayerConnect: function (socket) {
     // If we don't yet have bots, add some.
     if (ige.server.bots.length === 0) {
-      const botNames = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => `Bot_${num}`);
+      const botNames = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => 'Bot_' + num);
       ige.server.bots = botNames.map((botName) =>
         ige.$('gameScene')
           .addBotToScene(botName)

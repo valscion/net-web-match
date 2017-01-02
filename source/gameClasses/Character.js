@@ -114,7 +114,7 @@ var Character = IgeEntityBox2d.extend({
    */
   changeWeapon: function (weapon) {
     if (this._weapon !== weapon) {
-      this.log(`Changing weapon to ${weapon}`);
+      this.log('Changing weapon to ' + weapon);
       this._weapon = weapon;
 
       if (ige.isClient) {
