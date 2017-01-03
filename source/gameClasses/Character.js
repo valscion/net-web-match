@@ -62,33 +62,43 @@ var Character = IgeEntityBox2d.extend({
     IgeEntity.prototype.tick.call(this, ctx);
 
     if (ige.isClient) {
-      this._transformContext(ctx, true);
-
-      var rayCasts = this.streamProperty('debugRayCasts');
-      if (rayCasts) {
-        ctx.strokeStyle = 'rgba(255, 128, 128, 0.5)';
-
-        rayCasts.forEach(function (rayCast) {
-          var startPoint = new IgePoint2d(rayCast.startX, rayCast.startY);
-          var hitPoint = new IgePoint2d(rayCast.hitX, rayCast.hitY);
-          var endPoint = new IgePoint2d(rayCast.endX, rayCast.endY);
-
-          ctx.lineWidth = 10;
-          ctx.strokeStyle = 'rgba(255, 64, 64, 0.5)';
-          ctx.beginPath();
-          ctx.moveTo(startPoint.x, startPoint.y);
-          ctx.lineTo(hitPoint.x, hitPoint.y);
-          ctx.stroke();
-        });
-      }
-
-      this._transformContext(ctx, true);
+      this._drawDebugRaycasts(ctx);
     }
 
     if (ige.isServer) {
       this.streamProperty('debugRayCasts', this._rayCasts.slice());
       this._rayCasts.length = 0;
     }
+  },
+
+  /**
+   * Renders the raycasts to the given context
+   * @privat
+   */
+  _drawDebugRaycasts: function (ctx) {
+    ctx.save();
+
+    this._transformContext(ctx, true);
+
+    var rayCasts = this.streamProperty('debugRayCasts');
+    if (rayCasts) {
+      ctx.strokeStyle = 'rgba(255, 128, 128, 0.5)';
+
+      rayCasts.forEach(function (rayCast) {
+        var startPoint = new IgePoint2d(rayCast.startX, rayCast.startY);
+        var hitPoint = new IgePoint2d(rayCast.hitX, rayCast.hitY);
+        var endPoint = new IgePoint2d(rayCast.endX, rayCast.endY);
+
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = 'rgba(255, 64, 64, 0.5)';
+        ctx.beginPath();
+        ctx.moveTo(startPoint.x, startPoint.y);
+        ctx.lineTo(hitPoint.x, hitPoint.y);
+        ctx.stroke();
+      });
+    }
+
+    ctx.restore();
   },
 
   /**
