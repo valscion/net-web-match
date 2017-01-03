@@ -56,7 +56,6 @@ var ClassicBotComponent = IgeClass.extend({
 
     var bot = this.botControl;
     var currentRot = this.rotate().z() - Math.radians(90);
-    var scaleRatio = ige.box2d.scaleRatio();
 
     // Mikäli botti ei ole liian lähellä seinää ja on aika arpoa sille uusi suunta
     // niin tehdään se nyt.
