@@ -22,10 +22,15 @@ var Character = IgeEntityBox2d.extend({
     // Start with pistol
     this.changeWeapon('pistol');
 
-    // Debug AI sight
-    this._rayCasts = [];
+    // Setup stream properties ready
     this.streamProperty();
     this.streamSectionsPush('props');
+
+    // Debug AI sight
+    this._rayCasts = [];
+
+    // Health
+    this._health = 100;
 
     // Setup physics, but only for the server
     if (ige.isServer) {
@@ -63,6 +68,7 @@ var Character = IgeEntityBox2d.extend({
 
     if (ige.isClient) {
       this._drawDebugRaycasts(ctx);
+      this._drawHealth(ctx);
     }
 
     if (ige.isServer) {
@@ -73,7 +79,8 @@ var Character = IgeEntityBox2d.extend({
 
   /**
    * Renders the raycasts to the given context
-   * @privat
+   *
+   * @private
    */
   _drawDebugRaycasts: function (ctx) {
     ctx.save();
@@ -99,6 +106,18 @@ var Character = IgeEntityBox2d.extend({
     }
 
     ctx.restore();
+  },
+
+  /**
+   * Renders the player health to the given context
+   *
+   * @private
+   */
+  _drawHealth: function (ctx) {
+    var healthText = "Health: " + this._health;
+    var measurement = ctx.measureText(healthText);
+    ctx.rotate(-this.rotate().z());
+    ctx.strokeText("Health: " + this._health, -measurement.width / 2, -this.height() / 2);
   },
 
   /**
