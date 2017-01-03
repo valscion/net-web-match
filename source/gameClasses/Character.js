@@ -59,6 +59,31 @@ var Character = IgeEntityBox2d.extend({
   },
 
   /**
+   * Processes the updates required each frame. Called only ONCE per frame.
+   */
+  update: function (ctx, tickDelta) {
+    // Call the super-class method
+    IgeEntity.prototype.update.call(this, ctx, tickDelta);
+
+    if (ige.isServer) {
+      this.streamProperty('debugRayCasts', this._rayCasts.slice());
+      this._rayCasts.length = 0;
+    }
+
+    if (ige.isClient) {
+      var newHealth = this.streamProperty('health');
+      if (newHealth !== undefined && newHealth !== this._health) {
+        this._health = newHealth;
+      }
+    }
+
+    if (ige.isServer) {
+      this._health -= 0.01;
+      this.streamProperty('health', this._health);
+    }
+  },
+
+  /**
    * Called every frame by the engine when this entity is mounted to the scenegraph.
    * @param ctx The canvas context to render to.
    */
@@ -69,11 +94,6 @@ var Character = IgeEntityBox2d.extend({
     if (ige.isClient) {
       this._drawDebugRaycasts(ctx);
       this._drawHealth(ctx);
-    }
-
-    if (ige.isServer) {
-      this.streamProperty('debugRayCasts', this._rayCasts.slice());
-      this._rayCasts.length = 0;
     }
   },
 
@@ -114,10 +134,10 @@ var Character = IgeEntityBox2d.extend({
    * @private
    */
   _drawHealth: function (ctx) {
-    var healthText = "Health: " + this._health;
+    var healthText = "Health: " + (Math.round(this._health * 100) / 100);
     var measurement = ctx.measureText(healthText);
     ctx.rotate(-this.rotate().z());
-    ctx.strokeText("Health: " + this._health, -measurement.width / 2, -this.height() / 2);
+    ctx.strokeText(healthText, -measurement.width / 2, -this.height() / 2);
   },
 
   /**
