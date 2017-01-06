@@ -21,7 +21,7 @@ var ContactListener = IgeClass.extend({
   },
 
   contactEnd: function(contact) {
-    console.log('Contact ends between', contact.igeEntityA()._id, 'and', contact.igeEntityB()._id);
+    // console.log('Contact ends between', contact.igeEntityA()._id, 'and', contact.igeEntityB()._id);
   }
 });
 
