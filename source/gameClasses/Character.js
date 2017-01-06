@@ -76,11 +76,6 @@ var Character = IgeEntityBox2d.extend({
         this._health = newHealth;
       }
     }
-
-    if (ige.isServer) {
-      this._health -= 0.01;
-      this.streamProperty('health', this._health);
-    }
   },
 
   /**
@@ -192,6 +187,14 @@ var Character = IgeEntityBox2d.extend({
 
     b2dBody.SetLinearVelocity(b2dVel);
     b2dBody.SetAwake(true);
+  },
+
+  /**
+   * Reduces the player health by the given amount. Only works on server
+   */
+  reduceHealth: function (delta) {
+    this._health -= delta;
+    this.streamProperty('health', this._health);
   }
 });
 

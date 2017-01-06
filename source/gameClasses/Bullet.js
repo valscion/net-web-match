@@ -63,6 +63,17 @@ var Bullet = IgeEntityBox2d.extend({
    * Called when this entity collides with another entity
    */
   handleContactWith: function (otherEntity, contact) {
+    // Handle different kind of damage based on the bullet type
+    // TODO: Use weapon properties and range, not like this :D
+    switch (this._type) {
+      case 'pistol':
+        if (otherEntity.category() === 'Character') {
+          otherEntity.reduceHealth(ige.weapon.getProp('pistol', 'damage'));
+        }
+        break;
+      default:
+        this.log("Can't handle collision for weapon type " + this._type, 'warning');
+    }
     this.destroy();
   }
 });
