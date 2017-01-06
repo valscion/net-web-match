@@ -3,6 +3,7 @@ var igeConfig = {
     {name: 'WorldScene', path: './levels/WorldScene'},
     {name: 'GameScene', path: './levels/GameScene'},
     {name: 'ServerNetworkEvents', path: './gameClasses/ServerNetworkEvents'},
+    {name: 'ContactListener', path: './gameClasses/ContactListener'},
     {name: 'Weapon', path: './gameClasses/Weapon'},
     {name: 'Bullet', path: './gameClasses/Bullet'},
     {name: 'Character', path: './gameClasses/Character'},

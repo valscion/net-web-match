@@ -24,6 +24,8 @@ var Server = IgeClass.extend({
       .box2d.createWorld()
       .box2d.start();
 
+    ige.addComponent(ContactListener);
+
     // Add the networking component
     ige.addComponent(IgeNetIoComponent)
       // Start the network server
