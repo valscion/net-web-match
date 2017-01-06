@@ -57,6 +57,13 @@ var Bullet = IgeEntityBox2d.extend({
     b2dBody.SetLinearVelocity(b2dVel);
 
     return this;
+  },
+
+  /**
+   * Called when this entity collides with another entity
+   */
+  handleContactWith: function (otherEntity, contact) {
+    this.destroy();
   }
 });
 

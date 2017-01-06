@@ -11,7 +11,13 @@ var ContactListener = IgeClass.extend({
   },
 
   contactBegin: function(contact) {
-    console.log('Contact begins between', contact.igeEntityA()._id, 'and', contact.igeEntityB()._id);
+    const entityA = contact.igeEntityA();
+    const entityB = contact.igeEntityB();
+    if (entityA.category() === 'Bullet') {
+      entityA.handleContactWith(entityB, contact);
+    } else if (entityB.category() === 'Bullet') {
+      entityB.handleContactWith(entityA, contact);
+    }
   },
 
   contactEnd: function(contact) {
