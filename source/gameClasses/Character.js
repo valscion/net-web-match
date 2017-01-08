@@ -218,6 +218,10 @@ var Character = IgeEntityBox2d.extend({
    * Respawns a character. Internal.
    */
   _respawn: function () {
+    // Restore health and send it to clients
+    this._health = 100;
+    this.streamProperty('health', this._health);
+
     // Unhide the entity on server-side to toggle collisions back
     // NOTE: This does not unhide the entity on client side
     this.show();
