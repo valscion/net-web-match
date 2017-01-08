@@ -104,15 +104,12 @@ var GameScene = IgeScene2d.extend({
    * Adds a new player character to the scene
    */
   addPlayerToScene: function (clientId) {
-    // TODO: Calculate freePos by center without duplicating
-    //       the radius of a Character here.
-    var freePos = this._nextUnoccupiedPosition().addPoint({x: 19, y: 19});
-
     var player = new Character()
       .id(clientId)
-      .addComponent(PlayerComponent)
-      .translateTo(freePos.x, freePos.y, 0)
-      .mount(this);
+      .addComponent(PlayerComponent);
+
+    this.placeCharacterToScene(player);
+    player.mount(this);
 
     return player;
   },
@@ -121,17 +118,24 @@ var GameScene = IgeScene2d.extend({
    * Adds a new bot character to the scene
    */
   addBotToScene: function (botName) {
+    var bot = new Character()
+      .id(botName)
+      .addComponent(ClassicBotComponent);
+
+    this.placeCharacterToScene(bot);
+    bot.mount(this);
+
+    return bot;
+  },
+
+  /**
+   * Places the given character to the scene
+   */
+  placeCharacterToScene: function (char) {
     // TODO: Calculate freePos by center without duplicating
     //       the radius of a Character here.
     var freePos = this._nextUnoccupiedPosition().addPoint({x: 19, y: 19});
-
-    var bot = new Character()
-      .id(botName)
-      .addComponent(ClassicBotComponent)
-      .translateTo(freePos.x, freePos.y, 0)
-      .mount(this);
-
-    return bot;
+    char.translateTo(freePos.x, freePos.y, 0);
   },
 
   /**
