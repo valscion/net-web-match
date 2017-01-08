@@ -198,6 +198,30 @@ var Character = IgeEntityBox2d.extend({
   reduceHealth: function (delta) {
     this._health -= delta;
     this.streamProperty('health', this._health);
+
+    if (this._health <= 0) {
+      this.kill();
+    }
+  },
+
+  /**
+   * Kills the Character, respawning it after a timeout
+   */
+  kill: function () {
+    // Hide the entity on server-side to untoggle collisions
+    // NOTE: This does not hide the entity on client side
+    this.hide();
+    new IgeTimeout(this._respawn.bind(this), 3000);
+  },
+
+  /**
+   * Respawns a character. Internal.
+   */
+  _respawn: function () {
+    // Unhide the entity on server-side to toggle collisions back
+    // NOTE: This does not unhide the entity on client side
+    this.show();
+    ige.$('gameScene').placeCharacterToScene(this);
   }
 });
 
