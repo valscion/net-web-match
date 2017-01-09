@@ -80,12 +80,12 @@ var ClassicBotComponent = IgeClass.extend({
       const currentPos = this.worldPosition();
       // Nyt lasketaan etäisyys edessä olevaan esteeseen.
       // Etäisyys lasketaan objektin keskeltä sekä reunoista eli objektin koko leveydeltä.
-      const closestAhead = bot._getClosestObjectFrom(currentPos, currentRot);
-      const closestFromLeft = bot._getClosestObjectFrom(currentPos.addPoint({
+      const closestAhead = bot._getClosestObjectByRotation(currentPos, currentRot);
+      const closestFromLeft = bot._getClosestObjectByRotation(currentPos.addPoint({
         x: 15 * Math.cos(currentRot + (Math.PI / 2)),
         y: 15 * Math.sin(currentRot + (Math.PI / 2))
       }), currentRot);
-      const closestFromRight = bot._getClosestObjectFrom(currentPos.addPoint({
+      const closestFromRight = bot._getClosestObjectByRotation(currentPos.addPoint({
         x: 15 * Math.cos(currentRot - (Math.PI / 2)),
         y: 15 * Math.sin(currentRot - (Math.PI / 2))
       }), currentRot);
@@ -102,8 +102,8 @@ var ClassicBotComponent = IgeClass.extend({
 
       // Jos este on niin lähellä että siihen pitää reagoida niin tutkitaan se nyt.
       if (minDist < wakeupDist) {
-        const checkLeft = bot._getClosestObjectFrom(currentPos, currentRot - Math.radians(exploreAngle));
-        const checkRight = bot._getClosestObjectFrom(currentPos, currentRot + Math.radians(exploreAngle));
+        const checkLeft = bot._getClosestObjectByRotation(currentPos, currentRot - Math.radians(exploreAngle));
+        const checkRight = bot._getClosestObjectByRotation(currentPos, currentRot + Math.radians(exploreAngle));
 
         this.debugRayCastResult(checkLeft);
         this.debugRayCastResult(checkRight);
@@ -227,22 +227,21 @@ EndIf
   },
 
   /**
-   * Raycast to find the closest hit object
+   * Returns the closest raycast result between the two given  points
    */
-  _getClosestObjectFrom: function (startPos, rotation) {
-    var sightDistance = 1500;  // Kuinka kaukaa etsitään seinää pisimmillään
-    const bot = this.botControl;
-
-    let closestHit = null;
+  _getClosestObjectBetweenTwoPoints: function (startPointWorld, endPointWorld) {
     const scaleRatio = ige.box2d.scaleRatio();
+
     const startPoint = new ige.box2d.b2Vec2(
-      startPos.x / scaleRatio,
-      startPos.y / scaleRatio
+      startPointWorld.x / scaleRatio,
+      startPointWorld.y / scaleRatio
     );
     const endPoint = new ige.box2d.b2Vec2(
-      startPoint.x + (sightDistance / scaleRatio) * Math.cos(rotation),
-      startPoint.y + (sightDistance / scaleRatio) * Math.sin(rotation)
+      endPointWorld.x / scaleRatio,
+      endPointWorld.y / scaleRatio
     );
+
+    let closestHit = null;
 
     ige.box2d._world.RayCast((fixture, point, normal, fraction) => {
       const category = fixture.m_body._entity.category();
@@ -265,7 +264,7 @@ EndIf
     if (closestHit) {
       return {
         distance: Math.sqrt(closestHit.distSquare) * scaleRatio,
-        startPoint: startPos,
+        startPoint: startPointWorld,
         hitPoint: new IgePoint2d(
           closestHit.point.x * scaleRatio,
           closestHit.point.y * scaleRatio
@@ -279,6 +278,20 @@ EndIf
         entity: closestHit.fixture.m_body._entity
       };
     }
+  },
+
+  /**
+   * Raycast to find the closest hit object using the given rotation
+   */
+  _getClosestObjectByRotation: function (startPos, rotation) {
+    var sightDistance = 1500;  // Kuinka kaukaa etsitään seinää pisimmillään
+
+    const endPoint = new IgePoint2d(
+      startPos.x + sightDistance * Math.cos(rotation),
+      startPos.y + sightDistance * Math.sin(rotation)
+    );
+
+    return this._getClosestObjectBetweenTwoPoints(startPos, endPoint);
   }
 });
 
