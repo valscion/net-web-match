@@ -17,7 +17,7 @@ var Weapon = IgeClass.extend({
 
     self.PROPERTIES = {
       character: 'texture',  // Pelihahmon objekti
-      reloadtime: 'scalar',  // Aseen latausaika
+      reloadTime: 'scalar',  // Aseen latausaika
       bullet: 'texture',     // Ammusobjekti
       shootsound: 'scalar',  // Ampumisen ääni
       hitsound: 'scalar',    // Osuman ääni
@@ -38,14 +38,14 @@ var Weapon = IgeClass.extend({
       icon: 'texture',       // Pieni ikoni tappoviesteihin
       pickcount: 'scalar',   // Kuinka paljon tavaraa saa poimittaessa
       key: 'scalar',         // Näppäin jolla tämä ase valitaan
-      saferange: 'scalar',   // Etäisyys jonka alle kohteesta oleva botti ei ammu
-      shootrange: 'scalar',  // Etäisyys jonka alle kohteesta oleva botti ampuu
+      safeRange: 'scalar',   // Etäisyys jonka alle kohteesta oleva botti ei ammu
+      shootRange: 'scalar',  // Etäisyys jonka alle kohteesta oleva botti ampuu
       character2: 'texture', // Pelihahmon objekti (tiimi 2)
       weight: 'scalar'       // Aseen paino, vaikuttaa liikkumisen nopeuteen. 100=normaali
     };
 
     self.defineGun('pistol', {
-      reloadtime: 250,
+      reloadTime: 250,
       bulletspeed: 1200,
       bulletForth: 33,
       bulletYaw: 10,
@@ -66,8 +66,8 @@ var Weapon = IgeClass.extend({
       icon: './assets/textures/sprites/pistol_small.png',
       // TODO: Input mapping
       // key: cbKey1,
-      saferange: 100,
-      shootrange: 500,
+      safeRange: 100,
+      shootRange: 500,
       weight: 100
     })
   },

@@ -24,6 +24,12 @@ var ClassicBotComponent = IgeClass.extend({
     this._lastAngle = 0;
     this._spawnTime = ige.currentTime();
 
+    // AI skill variables
+    const skill = 20;
+    const botOrdinal = 1;
+    this._fightRotate = 1.5 + (20 / 1.5);
+    this._shootingAngle = 4.0 + (botOrdinal * 1.5);
+
     // Random start rotation
     this._entity.rotateBy(0, 0, Math.radians(this.randFloat(0, 360)));
 
@@ -56,6 +62,7 @@ var ClassicBotComponent = IgeClass.extend({
 
     var bot = this.botControl;
     var currentRot = this.rotate().z() - Math.radians(90);
+    var currentPos = this.worldPosition();
 
     // Mikäli botti ei ole liian lähellä seinää ja on aika arpoa sille uusi suunta
     // niin tehdään se nyt.
@@ -77,7 +84,6 @@ var ClassicBotComponent = IgeClass.extend({
     // Seuraavaksi alkaa varsinainen tekoäly jossa tutkitaan ympäristöä.
     // Tämä tehdää kuitenkin vain mikäli botti ei ole liian lähellä jotakin estettä.
     if (!bot._tooClose) {
-      const currentPos = this.worldPosition();
       // Nyt lasketaan etäisyys edessä olevaan esteeseen.
       // Etäisyys lasketaan objektin keskeltä sekä reunoista eli objektin koko leveydeltä.
       const closestAhead = bot._getClosestObjectByRotation(currentPos, currentRot);
@@ -143,51 +149,73 @@ var ClassicBotComponent = IgeClass.extend({
       }
       bot._lastAngle = 0;
     }
-/*
-// Taisteluäly
-moveDirection = 1
-pickedPlayer = 0
-pickedDist = 999
-pickedDirection = 0
-// Käydään läpi kaikki muut pelaajat
-For plr.PLAYERS = Each PLAYERS
-    enemy = True
-    If gPlayMode <> DM And player\team = plr\team Then enemy = False
-    If enemy = True And plr\playerId <> player\playerId And plr\health > 0 And plr\loggedIn = True And Distance2(player\obj, plr\obj) < 500 Then
-        If PickPlayer(player\obj, plr\obj) = True Then
-            // Jos pelaaja on näkyvissä ja lähimpänä niin talletetaan tiedot muuttujiin
-            If gDistance < pickedDist And Abs(gDirection) < 70 Then
-                pickedDist = gDistance
-                pickedPlayer = player\playerId
-                pickedDirection = gDirection
-            EndIf
-        EndIf
-    EndIf
-Next plr
-// Onko joku uhri näkösällä
-If pickedPlayer > 0 Then
-    If player\sideStep = 0 Then
-        player\sideStep = Rnd(-1, 1)
-    EndIf
-    // Nollataan liikkumistekoäly
-    player\tooClose = False
-    // Asetetaan kääntyminen kohti uhria
-    player\rotation = pickedDirection * player\fightRotate
-    // Aseesta riippuen etäisyys kohteeseen ei saa olla liian pieni
-    If pickedDist < aWeapon(player\weapon, WPNF_SAFERANGE) Then moveDirection = -1
-    // Ammutaan vain jos kulma on riittävän pieni
-    sAngle# = player\shootingAngle
-    If player\weapon = WPN_CHAINSAW Then sAngle = sAngle * 2
-    protected = (player\spawnTime + SPAWN_PROTECT > Timer())
-    If protected = False And Abs(pickedDirection) < sAngle And pickedDist > aWeapon(player\weapon, WPNF_SAFERANGE) / 2 And pickedDist <= aWeapon(player\weapon, WPNF_SHOOTRANGE) Then
-        // Jos botilla on pistooli niin luodaan botille satunnaisuutta liipasunopeuteen
-        If player\weapon = WPN_PISTOL Then rldFc# = Rnd(1.2,2) Else rldFc# = 1.0
 
-        If (player\lastShoot + aWeapon(player\weapon, WPNF_RELOADTIME)*rldFc#) < Timer() Then
-            CreateServerBullet(player\playerId)
-            player\lastShoot = Timer()
-        EndIf
-    EndIf
+    // Taisteluäly
+    let moveDirection = 1;
+    let pickedPlayer = null;
+    let pickedDist = 999;
+    let pickedDirection = 0;
+    let __tempRayCast;
+    // Käydään läpi kaikki muut pelaajat
+    ige.$$('Character').forEach(char => {
+      if (char === this) return;
+      const charPos = char.worldPosition();
+
+      const distance = Math.sqrt(
+        Math.pow(charPos.x - currentPos.x, 2) +
+        Math.pow(charPos.y - currentPos.y, 2)
+      );
+
+      if (distance >= 500) return;
+
+      const visiblePlayer = bot._getClosestObjectBetweenTwoPoints(currentPos, charPos);
+
+      if (visiblePlayer && visiblePlayer.entity.category() === 'Character') {
+        const botToCharAngle = 0; // TODO: Calculate the angle between currentPos & charPos
+        // Jos pelaaja on näkyvissä ja lähimpänä niin talletetaan tiedot muuttujiin
+        if ((distance < pickedDist) && Math.abs(botToCharAngle) < 70) {
+          pickedDist = distance;
+          pickedPlayer = char;
+          pickedDirection = botToCharAngle;
+          __tempRayCast = visiblePlayer;
+        }
+      }
+    });
+
+    // Onko joku uhri näkösällä
+    if (pickedPlayer) {
+      if (bot._sideStep === 0) {
+        bot._sideStep = bot.randFloat(-1, 1);
+      }
+
+      // Nollataan liikkumistekoäly
+      bot._tooClose = false;
+      // Asetetaan kääntyminen kohti uhria
+      bot._rotation = pickedDirection * bot._fightRotate;
+      // Aseesta riippuen etäisyys kohteeseen ei saa olla liian pieni
+      if (pickedDist < ige.weapon.getProp(this.weapon(), 'safeRange')) {
+        moveDirection = -1;
+      }
+      // Ammutaan vain jos kulma on riittävän pieni
+      let sAngle = bot._shootingAngle;
+      if (this.weapon() === 'chainsaw') {
+        sAngle *= 2;
+      }
+      const spawnProtected = false; // TODO: Implement spawn protection
+      // protected = (player\spawnTime + SPAWN_PROTECT > Timer())
+      if (!spawnProtected && Math.abs(pickedDirection) < sAngle && pickedDist > ige.weapon.getProp(this.weapon(), 'safeRange') / 2 && pickedDist <= ige.weapon.getProp(this.weapon(), 'shootRange')) {
+        // Jos botilla on pistooli niin luodaan botille satunnaisuutta liipasunopeuteen
+        const rldFc = (this.weapon() === 'pistol') ? bot.randFloat(1.2, 2) : 1.0;
+
+        if ((bot._lastShoot + ige.weapon.getProp(this.weapon(), 'reloadTime') * rldFc) < ige._currentTime) {
+          // TODO: Fire!
+          // CreateServerBullet(player\playerId)
+          this.debugRayCastResult(__tempRayCast);
+          bot._lastShoot = ige._currentTime;
+        }
+      }
+    }
+/*
 Else
     player\sideStep = 0
     // Yhtään sopivaa uhria ei ole näkökentässä.
@@ -247,7 +275,7 @@ EndIf
       const category = fixture.m_body._entity.category();
       if (category === 'Bullet') return -1;
       if (category === 'Debug') return -1;
-      if (category === 'Character') return -1;
+      // if (category === 'Character') return -1;
 
       const distSquare = (
         Math.pow(startPoint.x - point.x, 2) +
