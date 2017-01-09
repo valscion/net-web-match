@@ -211,6 +211,9 @@ var Character = IgeEntityBox2d.extend({
     this.hide();
 
     if (ige.isServer) {
+      var b2dBody = this._box2dBody;
+      b2dBody.SetAwake(false);
+
       ige.network.send('playerKilled', this.id());
       new IgeTimeout(this.respawn.bind(this), 3000);
     }
@@ -223,6 +226,10 @@ var Character = IgeEntityBox2d.extend({
     this._health = 100;
 
     if (ige.isServer) {
+      var b2dBody = this._box2dBody;
+      b2dBody.SetLinearVelocity(new ige.box2d.b2Vec2(0, 0));
+      b2dBody.SetAwake(true);
+
       ige.network.send('playerRespawned', this.id());
       this.streamProperty('health', this._health);
       ige.$('gameScene').placeCharacterToScene(this);
