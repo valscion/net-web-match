@@ -220,13 +220,14 @@ var Character = IgeEntityBox2d.extend({
    * Called when the player is respawned
    */
   respawn: function () {
+    this._health = 100;
+
     if (ige.isServer) {
       ige.network.send('playerRespawned', this.id());
       this.streamProperty('health', this._health);
       ige.$('gameScene').placeCharacterToScene(this);
     }
 
-    this._health = 100;
     this.show();
   }
 });
