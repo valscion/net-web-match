@@ -41,6 +41,34 @@ var ClientNetworkEvents = {
         }
       });
     }
+  },
+
+  /**
+   * Is called when the player gets killed and a "playerKilled" command
+   * is received by the client from the server.
+   *
+   * The incoming client ID is the ID of the Character that got killed.
+   */
+  _onPlayerKilled: function (data) {
+    if (ige.$(data)) {
+      ige.$(data).kill();
+    } else {
+      ige.network.log('Character(' + data + ') to be killed was not be found!', 'warning');
+    }
+  },
+
+  /**
+   * Is called when the player is respawned and a "playerRespawned" command
+   * is received by the client from the server.
+   *
+   * The incoming client ID is the ID of the Character that respawned.
+   */
+  _onPlayerRespawned: function (data) {
+    if (ige.$(data)) {
+      ige.$(data).respawn();
+    } else {
+      ige.network.log('Character(' + data + ') to be respawned was not be found!', 'warning');
+    }
   }
 };
 

@@ -205,27 +205,29 @@ var Character = IgeEntityBox2d.extend({
   },
 
   /**
-   * Kills the Character, respawning it after a timeout
+   * Called when the player is killed.
    */
   kill: function () {
-    // Hide the entity on server-side to untoggle collisions
-    // NOTE: This does not hide the entity on client side
     this.hide();
-    new IgeTimeout(this._respawn.bind(this), 3000);
+
+    if (ige.isServer) {
+      ige.network.send('playerKilled', this.id());
+      new IgeTimeout(this.respawn.bind(this), 3000);
+    }
   },
 
   /**
-   * Respawns a character. Internal.
+   * Called when the player is respawned
    */
-  _respawn: function () {
-    // Restore health and send it to clients
-    this._health = 100;
-    this.streamProperty('health', this._health);
+  respawn: function () {
+    if (ige.isServer) {
+      ige.network.send('playerRespawned', this.id());
+      this.streamProperty('health', this._health);
+      ige.$('gameScene').placeCharacterToScene(this);
+    }
 
-    // Unhide the entity on server-side to toggle collisions back
-    // NOTE: This does not unhide the entity on client side
+    this._health = 100;
     this.show();
-    ige.$('gameScene').placeCharacterToScene(this);
   }
 });
 

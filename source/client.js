@@ -36,7 +36,11 @@ var Client = IgeClass.extend({
           // got a username or something?
           ige.network.start(serverUrl, function () {
             ige.network.debug(false);
-            ige.network.define('playerEntity', self._onPlayerEntity); // Defined in ./gameClasses/ClientNetworkEvents.js
+
+            // The following bound functions are defined in ./gameClasses/ClientNetworkEvents.js
+            ige.network.define('playerEntity', self._onPlayerEntity);
+            ige.network.define('playerKilled', self._onPlayerKilled);
+            ige.network.define('playerRespawned', self._onPlayerRespawned);
 
             ige.network.addComponent(IgeStreamComponent)
               // Create a listener that will fire whenever an entity
