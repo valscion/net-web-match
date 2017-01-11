@@ -255,6 +255,13 @@ EndIf
   },
 
   /**
+   * Wraps an angle (in degrees) between 0 and 360
+   */
+  _wrapAngle: function (angle) {
+    return angle - Math.floor(angle / 360) * 360;
+  },
+
+  /**
    * Returns the closest raycast result between the two given  points
    */
   _getClosestObjectBetweenTwoPoints: function (startPointWorld, endPointWorld) {
