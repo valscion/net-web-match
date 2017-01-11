@@ -171,7 +171,7 @@ var ClassicBotComponent = IgeClass.extend({
       const visiblePlayer = bot._getClosestObjectBetweenTwoPoints(currentPos, charPos);
 
       if (visiblePlayer && visiblePlayer.entity.category() === 'Character') {
-        const botToCharAngle = 0; // TODO: Calculate the angle between currentPos & charPos
+        const botToCharAngle = bot._angleBetweenEntities(this, visiblePlayer.entity);
         // Jos pelaaja on näkyvissä ja lähimpänä niin talletetaan tiedot muuttujiin
         if ((distance < pickedDist) && Math.abs(botToCharAngle) < 70) {
           pickedDist = distance;
@@ -191,7 +191,7 @@ var ClassicBotComponent = IgeClass.extend({
       // Nollataan liikkumistekoäly
       bot._tooClose = false;
       // Asetetaan kääntyminen kohti uhria
-      bot._rotation = pickedDirection * bot._fightRotate;
+      bot._rotation = Math.radians(pickedDirection * bot._fightRotate);
       // Aseesta riippuen etäisyys kohteeseen ei saa olla liian pieni
       if (pickedDist < ige.weapon.getProp(this.weapon(), 'safeRange')) {
         moveDirection = -1;
@@ -252,6 +252,28 @@ EndIf
 
       // MoveObject player\obj, PxPerSec(speed) * moveDirection * 100.0 / aWeapon( player\weapon, WPNF_WEIGHT ), PxPerSec(SIDESTEP_SPEED * 0.8) * player\sideStep * 100.0 / aWeapon( player\weapon, WPNF_WEIGHT )
     }
+  },
+
+  _angleBetweenEntities: function (entA, entB) {
+    /*
+    a# = GetAngle2(_obj1, _obj2) - ObjectAngle(_obj1)
+    If a > 180 Then a = a - 360
+    If a < -180 Then a = a + 360
+    gDirection = a
+    */
+    // Math.Atan2(b.Y - a.Y,b.X - a.X);
+    const posA = entA.worldPosition();
+    const posB = entB.worldPosition();
+
+    const rotA = entA.rotate().z() - Math.radians(90);
+
+    const aRad = Math.atan2(posB.y - posA.y, posB.x - posA.x) - rotA;
+    let a = this._wrapAngle(Math.degrees(aRad));
+
+    if (a > 180) a -= 360;
+    if (a < -180) a += 360;
+
+    return a;
   },
 
   /**
