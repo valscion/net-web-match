@@ -23,9 +23,6 @@ var Character = IgeEntityBox2d.extend({
     this.changeWeapon('pistol');
 
     // Setup stream properties ready
-    // TODO: Send special events for hits, deaths and health etc. instead of using stream
-    //       properties. All the streamed properties are sent on every tick which is very
-    //       wasteful and unnecessary.
     this.streamProperty();
     this.streamSectionsPush('props');
 
