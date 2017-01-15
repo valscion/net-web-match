@@ -44,7 +44,7 @@ var PlayerComponent = IgeClass.extend({
       ige.input.mapAction('right', ige.input.key.d);
       ige.input.mapAction('up', ige.input.key.w);
       ige.input.mapAction('down', ige.input.key.s);
-      ige.input.mapAction('shoot', ige.input.key.space);
+      ige.input.mapAction('shoot', ige.input.mouse.button1);
 
       ige.$('gameScene').mouseMove(this._onMouseMove);
     }
