@@ -71,7 +71,7 @@ var Character = IgeEntityBox2d.extend({
     // Call the super-class method
     IgeEntity.prototype.update.call(this, ctx, tickDelta);
 
-    if (ige.isServer) {
+    if (ige.isServer && this._isRaycastDebuggingEnabled()) {
       this.streamProperty('debugRayCasts', this._rayCasts.slice());
       this._rayCasts.length = 0;
     }
@@ -146,6 +146,7 @@ var Character = IgeEntityBox2d.extend({
    */
   debugRayCastResult: function (rayCast) {
     if (!rayCast) return;
+    if (!this._isRaycastDebuggingEnabled()) return;
 
     this._rayCasts.push({
       startX: rayCast.startPoint.x,
@@ -155,6 +156,13 @@ var Character = IgeEntityBox2d.extend({
       endX: rayCast.endPoint.x,
       endY: rayCast.endPoint.y
     });
+  },
+
+  /**
+   * Is raycast debugging enabled or not?
+   */
+  _isRaycastDebuggingEnabled: function () {
+    return typeof process !== 'undefined' && process.env && Boolean(process.env.DEBUG_RAYCASTS)
   },
 
   /**
