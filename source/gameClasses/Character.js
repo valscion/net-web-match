@@ -76,6 +76,11 @@ var Character = IgeEntityBox2d.extend({
     if (ige.isClient) {
       var newHealth = this.streamProperty('health');
       if (newHealth !== undefined && newHealth !== this._health) {
+        if (this.isHidden() && newHealth > 0) {
+          // This was a respawn!
+          this.respawn();
+        }
+
         this._health = newHealth;
       }
     }
@@ -262,9 +267,8 @@ var Character = IgeEntityBox2d.extend({
       b2dBody.SetLinearVelocity(new ige.box2d.b2Vec2(0, 0));
       b2dBody.SetAwake(true);
 
-      ige.network.send('playerRespawned', this.id());
-      this.streamProperty('health', this._health);
       ige.$('gameScene').placeCharacterToScene(this);
+      this.streamProperty('health', this._health);
     }
 
     this.show();

@@ -52,7 +52,6 @@ var Server = IgeClass.extend({
 
             // Create network messages only handled by the client
             ige.network.define('playerKilled');
-            ige.network.define('playerRespawned');
 
             ige.network.on('connect', self._onPlayerConnect); // Defined in ./gameClasses/ServerNetworkEvents.js
             ige.network.on('disconnect', self._onPlayerDisconnect); // Defined in ./gameClasses/ServerNetworkEvents.js
