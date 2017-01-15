@@ -23,6 +23,7 @@ var ClassicBotComponent = IgeClass.extend({
     this._nextAngle = 0;
     this._lastAngle = 0;
     this._spawnTime = ige.currentTime();
+    this._lastShoot = 0;
 
     // AI skill variables
     const skill = 20;
@@ -208,8 +209,7 @@ var ClassicBotComponent = IgeClass.extend({
         const rldFc = (this.weapon() === 'pistol') ? bot.randFloat(1.2, 2) : 1.0;
 
         if ((bot._lastShoot + ige.weapon.getProp(this.weapon(), 'reloadTime') * rldFc) < ige._currentTime) {
-          // TODO: Fire!
-          // CreateServerBullet(player\playerId)
+          this.fireWeapon();
           this.debugRayCastResult(__tempRayCast);
           bot._lastShoot = ige._currentTime;
         }
