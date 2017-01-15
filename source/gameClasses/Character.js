@@ -35,6 +35,9 @@ var Character = IgeEntityBox2d.extend({
     // Health
     this._health = 100;
 
+    // Last shot pistol hand
+    this._shotWithLeftHand = false;
+
     // Setup physics, but only for the server
     if (ige.isServer) {
       this.box2dBody({
@@ -179,6 +182,30 @@ var Character = IgeEntityBox2d.extend({
    */
   weapon: function () {
     return this._weapon;
+  },
+
+  /**
+   * Fires the current weapon. Only called on the server
+   */
+  fireWeapon: function () {
+    // TODO: Implement logic for other guns besides pistol
+    var handFactor = this._shotWithLeftHand ? 1 : -1;
+    var pos = this.worldPosition();
+    var rot = this.rotate().z() - Math.radians(90);
+    var xFact = Math.cos(rot);
+    var yFact = Math.sin(rot);
+    var x = pos.x + Math.cos(rot) * 33 + Math.cos(rot - Math.radians(90)) * 10 * handFactor;
+    var y = pos.y + Math.sin(rot) * 33 + Math.sin(rot - Math.radians(90)) * 10 * handFactor;
+
+    new Bullet(this.weapon())
+      .translateTo(x, y, 0)
+      .rotateTo(0, 0, rot)
+      .streamMode(1)
+      .lifeSpan(2000)
+      .mount(ige.$('gameScene'))
+      .fireAtWill();
+
+    this._shotWithLeftHand = !this._shotWithLeftHand;
   },
 
   /**
