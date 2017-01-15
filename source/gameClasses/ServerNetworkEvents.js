@@ -52,7 +52,7 @@ var ServerNetworkEvents = {
   _createOnPlayerControlDown: function (control) {
     return function (data, clientId) {
       var player = ige.server.players[clientId];
-      player.log('ServerEvent/Control(' + control + ') DOWN');
+      // player.log('ServerEvent/Control(' + control + ') DOWN');
       player.playerControl.controls[control] = true;
     }
   },
@@ -60,7 +60,7 @@ var ServerNetworkEvents = {
   _createOnPlayerControlUp: function (control) {
     return function (data, clientId) {
       var player = ige.server.players[clientId];
-      player.log('ServerEvent/Control(' + control + ') UP');
+      // player.log('ServerEvent/Control(' + control + ') UP');
       player.playerControl.controls[control] = false;
     }
   },
