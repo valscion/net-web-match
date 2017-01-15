@@ -34,6 +34,10 @@ var ContactListener = IgeClass.extend({
     if (contact.igeEntityA().isHidden() || contact.igeEntityB().isHidden()) {
       contact.SetEnabled(false);
     }
+    // Bullets shouldn't collide with each other
+    if (contact.igeBothCategories('Bullet')) {
+      contact.SetEnabled(false);
+    }
   }
 });
 
