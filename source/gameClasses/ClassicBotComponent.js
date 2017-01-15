@@ -246,8 +246,8 @@ EndIf
       this.translateCharacter(
         // TODO: Use the weight of weapon instead of 100, the current denominator
         // TODO: Sidestep? How?!
-        (((speed / 1000.0) * delta)/* * moveDirection */ * 100.0 / 100) * Math.cos(currentRot),
-        (((speed / 1000.0) * delta)/* * moveDirection */ * 100.0 / 100) * Math.sin(currentRot)
+        (((speed / 1000.0) * delta) * moveDirection * 100.0 / 100) * Math.cos(currentRot),
+        (((speed / 1000.0) * delta) * moveDirection * 100.0 / 100) * Math.sin(currentRot)
       )
 
       // MoveObject player\obj, PxPerSec(speed) * moveDirection * 100.0 / aWeapon( player\weapon, WPNF_WEIGHT ), PxPerSec(SIDESTEP_SPEED * 0.8) * player\sideStep * 100.0 / aWeapon( player\weapon, WPNF_WEIGHT )
