@@ -67,6 +67,9 @@ var PlayerComponent = IgeClass.extend({
 
     /* CEXCLUDE */
     if (ige.isServer) {
+      // Don't do anything if the entity is dead or hidden for some other reason
+      if (this.isHidden()) return;
+
       let velocityX = 0;
       let velocityY = 0;
 

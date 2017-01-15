@@ -65,6 +65,9 @@ var ClassicBotComponent = IgeClass.extend({
     var currentRot = this.rotate().z() - Math.radians(90);
     var currentPos = this.worldPosition();
 
+    // Don't do anything if the entity is dead or hidden for some other reason
+    if (this.isHidden()) return;
+
     // Mikäli botti ei ole liian lähellä seinää ja on aika arpoa sille uusi suunta
     // niin tehdään se nyt.
     if (!bot._tooClose && bot._nextAction < ige.currentTime()) {
@@ -294,7 +297,9 @@ EndIf
     let closestHit = null;
 
     ige.box2d._world.RayCast((fixture, point, normal, fraction) => {
-      const category = fixture.m_body._entity.category();
+      const entity = fixture.m_body._entity;
+      const category = entity.category();
+      if (entity.isHidden()) return -1;
       if (category === 'Bullet') return -1;
       if (category === 'Debug') return -1;
       // if (category === 'Character') return -1;
