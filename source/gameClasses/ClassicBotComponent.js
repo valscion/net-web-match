@@ -255,13 +255,6 @@ EndIf
   },
 
   _angleBetweenEntities: function (entA, entB) {
-    /*
-    a# = GetAngle2(_obj1, _obj2) - ObjectAngle(_obj1)
-    If a > 180 Then a = a - 360
-    If a < -180 Then a = a + 360
-    gDirection = a
-    */
-    // Math.Atan2(b.Y - a.Y,b.X - a.X);
     const posA = entA.worldPosition();
     const posB = entB.worldPosition();
 
